@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>ABP — RSO Femenina</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--blue:#0057B8;--panel:#16212e;--panel2:#1c2b3a;--border:#273d52;--t1:#fff;--t2:#c8daea;--t3:#6a8fa8;--r:5px;--r2:3px;}
+html,body{height:100%;background:#0e161f;color:var(--t1);font-family:'Barlow',sans-serif;overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100vh;}
+#topbar{display:flex;align-items:center;gap:6px;padding:0 10px;height:42px;min-height:42px;
+  background:var(--panel);border-bottom:2px solid var(--blue);flex-shrink:0;overflow-x:auto;}
+.brand-badge{width:28px;height:28px;background:var(--blue);border-radius:4px;display:flex;align-items:center;
+  justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:9px;color:#fff;line-height:1.1;text-align:center;flex-shrink:0;}
+.brand-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;color:#fff;flex-shrink:0;}
+.vsep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+.flex1{flex:1;}
+.mf{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.mf label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);white-space:nowrap;}
+.mf input,.mf select{background:var(--panel2);border:1px solid var(--border);border-radius:var(--r2);
+  color:#fff;font-family:'Barlow',sans-serif;font-size:11px;padding:3px 6px;width:100px;}
+.btn{display:flex;align-items:center;gap:3px;padding:4px 9px;border:1px solid var(--border);
+  border-radius:var(--r2);background:var(--panel2);color:var(--t2);cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;
+  text-transform:uppercase;transition:all 0.12s;white-space:nowrap;}
+.btn:hover{border-color:var(--blue);color:#fff;}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;}
+#toolbar{display:flex;align-items:center;flex-wrap:nowrap;gap:4px;overflow-x:auto;
+  padding:5px 10px;background:var(--panel2);border-bottom:1px solid var(--border);flex-shrink:0;}
+.tl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);white-space:nowrap;}
+.tool-btn{display:flex;align-items:center;gap:3px;padding:3px 8px;border:1px solid transparent;
+  border-radius:var(--r2);background:transparent;color:var(--t3);cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;
+  text-transform:uppercase;transition:all 0.1s;white-space:nowrap;}
+.tool-btn:hover{color:#fff;background:rgba(255,255,255,0.05);}
+.tool-btn.active{color:#fff;border-color:var(--tc,var(--border));background:rgba(255,255,255,0.07);}
+.sw{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;flex-shrink:0;}
+.sw.active{border-color:#fff;}
+.pc{padding:3px 8px;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:12px;cursor:grab;border:1.5px solid rgba(255,255,255,0.15);user-select:none;white-space:nowrap;}
+#field-row{display:flex;flex:1;overflow:hidden;min-height:0;}
+#field-wrap{flex:1;position:relative;overflow:hidden;background:#0e161f;min-width:0;}
+#field-wrap canvas{position:absolute;}
+#sidebar{width:210px;min-width:210px;flex-shrink:0;display:flex;flex-direction:column;
+  border-left:2px solid var(--border);background:var(--panel);overflow-y:auto;}
+.sb-section{padding:8px 10px;border-bottom:1px solid var(--border);}
+.sb-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:5px;}
+.sb-label{font-size:9px;color:var(--t3);margin-bottom:3px;text-transform:uppercase;letter-spacing:1px;}
+.sb-input{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:var(--r2);
+  color:#fff;font-family:'Barlow',sans-serif;font-size:11px;padding:4px 6px;}
+.sb-select{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:var(--r2);
+  color:#fff;font-family:'Barlow',sans-serif;font-size:11px;padding:4px 6px;cursor:pointer;margin-top:3px;}
+.field-btn{padding:3px 8px;border-radius:var(--r2);border:1px solid var(--border);
+  background:var(--panel2);color:var(--t2);font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:11px;cursor:pointer;text-transform:uppercase;}
+.field-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+#actions-row{display:flex;gap:4px;flex-wrap:wrap;padding:8px 10px;margin-top:auto;border-top:1px solid var(--border);}
+#toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);
+  background:#22c55e;color:#fff;padding:5px 14px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:'Barlow Condensed',sans-serif;
+  pointer-events:none;opacity:0;transition:opacity 0.25s;z-index:9999;}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="topbar">
+  <div class="brand-badge">RSO<br>FEM</div>
+  <div class="brand-name">ABP · Set Pieces</div>
+  <div class="vsep"></div>
+  <div class="mf"><label>Jugada</label><input id="ms" type="text" placeholder="Corner ofensivo..."></div>
+  <div class="mf"><label>Rival</label>
+    <select id="rival-top" onchange="onRivalTopChange()">
+      <option value="ATM">Atlético</option><option value="FCB">Barcelona</option>
+      <option value="DEP">Deportivo</option><option value="MCF">Madrid CFF</option>
+      <option value="DUX">Dux</option><option value="RMA">Real Madrid</option>
+      <option value="RCDE">Espanyol</option><option value="ATH">Athletic</option>
+      <option value="BAD">Badalona</option><option value="SFC">Sevilla</option>
+      <option value="ALA">Alavés</option><option value="EIB">Eibar</option>
+      <option value="VCF">Valencia</option><option value="CTF">Tenerife</option>
+      <option value="GRA">Granada</option>
+      <option value="GEN">Equipo ficticio</option>
+      <option value="NONE" selected>— Sin rival —</option>
+    </select>
+    <input id="gen-name-input" type="text" placeholder="Nombre equipo..." value="Equipo ficticio"
+      style="display:none;margin-left:4px;background:var(--panel2);border:1px solid var(--border);border-radius:var(--r2);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;padding:2px 6px;width:120px;"
+      oninput="onGenNameChange()">
+  </div>
+  <div class="vsep"></div>
+  <div style="display:flex;align-items:center;gap:3px;background:var(--panel2);border:1px solid var(--border);border-radius:var(--r2);padding:2px 6px;flex-shrink:0;">
+    <span class="tl">ZOOM</span>
+    <button class="btn" onclick="setZoom(zoom-0.1)" style="padding:1px 7px;">−</button>
+    <span id="zoom-label" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:#fff;min-width:36px;text-align:center;">100%</span>
+    <button class="btn" onclick="setZoom(zoom+0.1)" style="padding:1px 7px;">+</button>
+    <button class="btn" onclick="setZoom(1)" style="padding:1px 6px;font-size:10px;">↺</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:3px;background:var(--panel2);border:1px solid var(--border);border-radius:var(--r2);padding:2px 5px;flex-shrink:0;">
+    <button class="btn" onclick="prevPlay()">◀</button>
+    <span id="play-counter" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:#fff;white-space:nowrap;">1/1</span>
+    <button class="btn" onclick="nextPlay()">▶</button>
+    <button class="btn" onclick="newPlay()" style="background:var(--blue);border-color:var(--blue);color:#fff;">+ Nueva</button>
+  </div>
+  <div class="flex1"></div>
+  <span id="save-status" style="font-size:10px;color:var(--t3);font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;">✓ Guardado</span>
+  <button class="btn" onclick="clearAll()">🗑</button>
+  <button class="btn" onclick="undoABP()">↩</button>
+  <button class="btn" onclick="exportProject()" title="Descargar todas las jugadas como archivo .json">⬇ Proyecto</button>
+  <button class="btn" onclick="document.getElementById('import-project-input').click()" title="Cargar un archivo .json de jugadas previamente exportado">⬆ Proyecto</button>
+  <input type="file" id="import-project-input" accept="application/json" style="display:none" onchange="importProject(event)">
+  <button class="btn primary" onclick="exportIMG()">🖼 Exportar</button>
+</div>
+
+<div id="toolbar">
+  <span class="tl">Herr.</span>
+  <button class="tool-btn active" data-tool="move"   onclick="setTool('move')">● Mover</button>
+  <button class="tool-btn" data-tool="arrow"  onclick="setTool('arrow')"  style="--tc:#3b9eff"><span style="color:#3b9eff">→</span> Flecha</button>
+  <button class="tool-btn" data-tool="curve"  onclick="setTool('curve')"  style="--tc:#a78bfa"><span style="color:#a78bfa">↷</span> Curva</button>
+  <button class="tool-btn" data-tool="dline"  onclick="setTool('dline')"  style="--tc:#ffdd44"><span style="color:#ffdd44">╌</span> Discontinua</button>
+  <button class="tool-btn" data-tool="darrow" onclick="setTool('darrow')" style="--tc:#22d3ee"><span style="color:#22d3ee">⇢</span> Desmarque</button>
+  <button class="tool-btn" data-tool="line"   onclick="setTool('line')"   style="--tc:#aaaaaa"><span style="color:#aaa">—</span> Línea</button>
+  <button class="tool-btn" data-tool="zone"   onclick="setTool('zone')"   style="--tc:#22c55e"><span style="color:#22c55e">▭</span> Zona</button>
+  <button class="tool-btn" data-tool="circle" onclick="setTool('circle')" style="--tc:#22c55e"><span style="color:#22c55e">○</span> Círculo</button>
+  <button class="tool-btn" data-tool="text"   onclick="setTool('text')"   style="--tc:#c084fc"><span style="color:#c084fc">T</span> Texto</button>
+  <button class="tool-btn" data-tool="block"  onclick="setTool('block')"  style="--tc:#f0901a"><span style="color:#f0901a">⊠</span> Bloqueo</button>
+  <button class="tool-btn" data-tool="erase"  onclick="setTool('erase')"  style="--tc:#ef4444"><span style="color:#ef4444">✕</span> Borrar</button>
+  <div class="vsep"></div>
+  <span class="tl">Color</span>
+  <div style="display:flex;gap:3px;" id="swatches">
+    <div class="sw active" data-color="#ffffff" style="background:#fff;border-color:#888" onclick="setClr(this)"></div>
+    <div class="sw" data-color="#3b9eff" style="background:#3b9eff" onclick="setClr(this)"></div>
+    <div class="sw" data-color="#ef4444" style="background:#ef4444" onclick="setClr(this)"></div>
+    <div class="sw" data-color="#F0C040" style="background:#F0C040" onclick="setClr(this)"></div>
+    <div class="sw" data-color="#22c55e" style="background:#22c55e" onclick="setClr(this)"></div>
+    <div class="sw" data-color="#22d3ee" style="background:#22d3ee" onclick="setClr(this)"></div>
+    <div class="sw" data-color="#f0901a" style="background:#f0901a" onclick="setClr(this)"></div>
+    <div class="sw" data-color="#111111" style="background:#111;border:1px solid #555" onclick="setClr(this)"></div>
+  </div>
+  <div class="vsep"></div>
+  <span class="tl">RSO</span>
+  <button id="kit-toggle-1" class="btn active" onclick="setRSOKit(1)" style="padding:2px 6px;font-size:10px;font-weight:700;">1ª</button>
+  <button id="kit-toggle-2" class="btn" onclick="setRSOKit(2)" style="padding:2px 6px;font-size:10px;font-weight:700;background:#111;border-color:#555;color:#fff;">2ª</button>
+  <div style="display:flex;gap:3px;flex-wrap:nowrap;" id="rso-pieces"></div>
+  <div class="vsep"></div>
+  <span class="tl">Rival</span>
+  <div style="display:flex;gap:3px;flex-wrap:nowrap;" id="rival-pieces"></div>
+  <div class="vsep"></div>
+  <span class="tl">Material</span>
+  <div style="display:flex;gap:3px;" id="mat-pieces"></div>
+  <div class="vsep"></div>
+  <span class="tl">Etiquetas</span>
+  <select id="label-select" style="background:var(--panel2);border:1px solid var(--border);border-radius:var(--r2);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;padding:3px 6px;text-transform:uppercase;"></select>
+  <button class="btn" onclick="armLabelTool()" style="padding:3px 8px;">+ Colocar</button>
+</div>
+
+<div id="field-row">
+  <div id="field-wrap">
+    <canvas id="bgC"></canvas>
+    <canvas id="drwC"></canvas>
+    <canvas id="elC"></canvas>
+    <canvas id="uiC" style="cursor:crosshair;"></canvas>
+  </div>
+  <div id="sidebar">
+    <div class="sb-section">
+      <div class="sb-title">Lado del balón</div>
+      <div style="display:flex;gap:4px;">
+        <button class="field-btn active" data-bs="left"  onclick="setBallSide('left')" id="bs-left">◀ Izquierdo</button>
+        <button class="field-btn"        data-bs="right" onclick="setBallSide('right')" id="bs-right">Derecho ▶</button>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">Vista de campo</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;">
+        <button class="field-btn active" data-ft="area"          onclick="setField('area')">🔍 Área</button>
+        <button class="field-btn"        data-ft="half"          onclick="setField('half')">⬜ Medio campo</button>
+        <button class="field-btn"        data-ft="checks"        onclick="setField('checks')">⊞ Cuadros</button>
+        <button class="field-btn"        data-ft="zubieta"       onclick="setField('zubieta')">🏟 Zubieta</button>
+        <button class="field-btn"        data-ft="zubieta-close" onclick="setField('zubieta-close')">🏟 Cerca</button>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">Jugadas tipo</div>
+      <select id="lib-category" class="sb-select" onchange="onLibCategoryChange()">
+        <option value="ofensivo">⚡ Ofensivo</option>
+        <option value="defensivo">⛔ Defensivo</option>
+      </select>
+      <select id="lib-subcategory" class="sb-select" style="margin-top:5px;" onchange="onLibSubChange()"></select>
+      <input id="lib-search" type="text" class="sb-input" placeholder="🔍 Buscar jugada..." style="margin-top:5px;" oninput="onLibSubChange()">
+      <select id="lib-play" class="sb-select" style="margin-top:5px;"></select>
+      <div style="display:flex;gap:4px;margin-top:5px;">
+        <button class="btn primary" onclick="loadFromLibrary()" style="flex:1;">▶ Cargar</button>
+        <button class="btn" onclick="deleteFromLibrary()" style="color:#ef4444;" title="Quitar de jugadas tipo">🗑</button>
+      </div>
+      <button class="btn" onclick="saveAsLibraryPlay()" style="width:100%;margin-top:5px;justify-content:center;background:#16a34a;border-color:#16a34a;color:#fff;font-weight:700;">💾 Guardar jugada tipo</button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">Tipo de jugada</div>
+      <input id="play-title" type="text" class="sb-input" placeholder="RSO Corner ofensivo...">
+      <select id="play-type" class="sb-select" onchange="onPlayTypeChange()">
+        <option>Corner ofensivo</option><option>Corner defensivo</option>
+        <option>Falta lateral ofensiva</option><option>Falta lateral defensiva</option>
+        <option>Falta frontal</option>
+        <option>Saque de banda</option><option>Penalti</option><option>Otro</option>
+      </select>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">Descripción</div>
+      <textarea id="desc-input" class="sb-input" style="height:60px;resize:none;line-height:1.5;" placeholder="Instrucciones, señas, variantes..."></textarea>
+    </div>
+    <div class="sb-section" style="flex:1;">
+      <div class="sb-title">Notas tácticas</div>
+      <textarea id="notes-input" class="sb-input" style="height:70px;resize:none;line-height:1.5;" placeholder="- Primera referencia&#10;- Señal&#10;- Variante B..."></textarea>
+    </div>
+    <div id="actions-row">
+      <button class="btn primary" onclick="exportIMG()" style="flex:1;">🖼 Exportar PNG</button>
+      <button class="btn" onclick="clearAll()">🗑</button>
+      <button class="btn" onclick="undoABP()">↩</button>
+    </div>
+  </div>
+</div>
+</div>
+<div id="toast"></div>
+<script>
+
+// ═══ KIT TEXTURES (base64 PNG crops of real jerseys) ═══
+const KIT_IMG_1 = new Image();
+KIT_IMG_1.src = 'data:image/jpeg;base64,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';
+const KIT_IMG_2 = new Image();
+KIT_IMG_2.src = 'data:image/jpeg;base64,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';
+// ═══ CONSTANTS ═══════════════════════════════════════
+const PITCH_W=68,PA_W=40.32,PA_D=16.5,GA_W=18.32,GA_D=5.5;
+const PEN=11,ARC_R=9.15,CORNER_R=1.0,GOAL_W=7.32,CC_R=9.15;
+// Each team: field player kit (pattern+colors) + goalkeeper kit (solid) + ring border color
+const RIVALS={
+  ATM:{ pattern:'stripes', c1:'#CB3524', c2:'#ffffff', border:'#CB3524', gk:'#F2C94C' },
+  FCB:{ pattern:'stripes', c1:'#A50044', c2:'#004D98', border:'#A50044', gk:'#2ecc71' },
+  RMA:{ pattern:'solid',   c1:'#ffffff', c2:'#ffffff', border:'#6e3fa3', gk:'#5dc6e8' },
+  ATH: { pattern:'stripes', c1:'#EE2523', c2:'#ffffff', border:'#111111', gk:'#111111' },
+  DEP: { pattern:'stripes', c1:'#6AADE4', c2:'#ffffff', border:'#6AADE4', gk:'#2ecc71' },
+  RCDE:{ pattern:'stripes', c1:'#003DA5', c2:'#ffffff', border:'#003DA5', gk:'#2ecc71' },
+  DUX: { pattern:'solid',   c1:'#6e0f23', c2:'#6e0f23', border:'#111111', gk:'#111111' },
+  MCF: { pattern:'solid',   c1:'#ffffff', c2:'#ffffff', border:'#e85d9c', gk:'#5dc6e8' },
+  CTF: { pattern:'halves-h', c1:'#ffffff', c2:'#1565C0', border:'#1565C0', gk:'#7b3fa0' },
+  GRA: { pattern:'stripes-h', c1:'#CB3524', c2:'#ffffff', border:'#1565C0', gk:'#1565C0' },
+  BAD: { pattern:'halves',  c1:'#111111', c2:'#ffffff', border:'#333333', gk:'#F2C94C' },
+  SFC: { pattern:'solid',   c1:'#ffffff', c2:'#ffffff', border:'#D2122E', gk:'#f0901a' },
+  ALA: { pattern:'stripes', c1:'#1565C0', c2:'#ffffff', border:'#ffffff', gk:'#2ecc71' },
+  EIB: { pattern:'stripes', c1:'#7a1230', c2:'#1a3a8f', border:'#7a1230', gk:'#2ecc71' },
+  VCF: { pattern:'halves',  c1:'#ffffff', c2:'#111111', border:'#f0901a', gk:'#2ecc71' },
+  GEN: { pattern:'solid',   c1:'#7d8a99', c2:'#7d8a99', border:'#4a5564', gk:'#9aa5b1' },
+};
+const RSO_PLAYERS=[
+  {i:'CF',n:'Claudia'},{i:'AIA',n:'Aiara'},{i:'LC',n:'L.Camino'},
+  {i:'LAB',n:'Esther'},{i:'CE',n:'Ceci'},{i:'IE',n:'Intza'},
+  {i:'NE',n:'Nerea'},{i:'AC',n:'A.Campo'},{i:'PF',n:'Paula'},
+  {i:'KL',n:'Klara'},{i:'AM',n:'A.Marín'},{i:'AVA',n:'Ava'},
+  {i:'SK',n:'Sonya'},{i:'ARO',n:'Arola'},{i:'IRA',n:'Iraia'},
+  {i:'AIN',n:'Ainhoa'},{i:'APA',n:'Apari'},{i:'JU',n:'Julia'},{i:'ALA',n:'Alazne'}
+];
+
+// ═══ STATE ═══════════════════════════════════════════
+let tool='move', clr='#ffffff', fieldType='area', ballSide='left';
+let pendingLabel=null;
+let shownDepth=32;  // meters of field depth shown — set by setField()
+let selectedDrw=null;
+let selectedEl=null;
+let elements=[], drawings=[], undoStack=[], clipboard=null;
+let palDrag=null, dragEl=null, dragDrw=null, doff={x:0,y:0}, dragDrwStart=null;
+let rsoKit=1; // 1=primera equipación (franjas), 2=segunda equipación (negra)
+function setRSOKit(n){
+  rsoKit=n;
+  document.getElementById('kit-toggle-1').classList.toggle('active',n===1);
+  document.getElementById('kit-toggle-2').classList.toggle('active',n===2);
+  document.querySelectorAll('#rso-pieces .pc').forEach(d=>{
+    if(n===1){
+      d.style.background='linear-gradient(90deg,#fff 0%,#fff 25%,#0057B8 25%,#0057B8 55%,#fff 55%,#fff 75%,#0057B8 75%,#0057B8 100%)';
+      d.style.color='#0057B8';d.style.border='1.5px solid #C8991A';
+    } else {
+      d.style.background='#111';d.style.color='rgba(255,255,255,0.7)';d.style.border='1.5px solid rgba(255,255,255,0.4)';
+    }
+  });
+}
+let dragTextResize=null, dragTextStart=null;
+let dragRotate=null;
+let panning=false, panStart={x:0,y:0}, panStartXY={x:0,y:0};
+let drawing=false, ds=null, lastMouse={x:0,y:0};
+let zoom=1.0, lineScale=1.0;
+let panX=0, panY=0; // canvas pan offset in pixels (screen space)
+let plays=[{elements:[],drawings:[],title:'',playType:'Corner ofensivo',desc:'',notes:''}];
+let currentPlay=0;
+
+// ═══ LIBRARY — permanent curated catalog ════════════════
+const LIB_CATEGORIES={
+  ofensivo:{label:'⚡ Ofensivo', subs:{
+    corto:'En corto', primer_palo:'1er palo', segundo_palo:'2º palo',
+    abierto:'Abierto', penalti:'Penalti'
+  }},
+  defensivo:{label:'⛔ Defensivo', subs:{
+    zonal:'Defensa zonal', mixta:'Defensa mixta'
+  }}
+};
+function emptyLibrary(){
+  const lib={};
+  Object.keys(LIB_CATEGORIES).forEach(cat=>{
+    lib[cat]={};
+    Object.keys(LIB_CATEGORIES[cat].subs).forEach(sub=>{lib[cat][sub]=[];});
+  });
+  return lib;
+}
+let library=emptyLibrary();
+
+const bgC=document.getElementById('bgC'), drwC=document.getElementById('drwC');
+const elC=document.getElementById('elC'), uiC=document.getElementById('uiC');
+const bgCtx=bgC.getContext('2d'), drwCtx=drwC.getContext('2d');
+const elCtx=elC.getContext('2d'), uiCtx=uiC.getContext('2d');
+
+// ═══ RESIZE ══════════════════════════════════════════
+function resize(){
+  const wrap=document.getElementById('field-wrap');
+  const aw=wrap.clientWidth, ah=wrap.clientHeight;
+  const ratio=PITCH_W/shownDepth;
+  let cw=aw, ch=Math.round(aw/ratio);
+  if(ch>ah){ch=ah;cw=Math.round(ah*ratio);}
+  const ox=Math.round((aw-cw)/2), oy=Math.round((ah-ch)/2);
+  [bgC,drwC,elC,uiC].forEach(c=>{
+    c.width=cw; c.height=ch;
+    c.style.left=ox+'px'; c.style.top=oy+'px';
+    c.style.width=cw+'px'; c.style.height=ch+'px';
+  });
+  applyTransform();
+  drawField(); redrawAll();
+}
+
+// ═══ FIELD DRAWING ════════════════════════════════════
+function hexToRgba(hex,a){
+  const r=parseInt(hex.slice(1,3),16)||0,g=parseInt(hex.slice(3,5),16)||0,b=parseInt(hex.slice(5,7),16)||0;
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function drawGrassStripes(ctx,CW,CH,shownM,horizontal){
+  const LIGHT='#5ba84a',DARK='#3d7a2e';
+  const pat=[5.5,5.5,5.5,6,6,6,6,6,6];
+  ctx.fillStyle=DARK; ctx.fillRect(0,0,CW,CH);
+  let pos=0;
+  pat.forEach((m,i)=>{
+    const m2=Math.min(m,shownM-pos); if(m2<=0){pos+=m;return;}
+    const p0=Math.round(pos/shownM*(horizontal?CW:CH));
+    const p1=Math.round((pos+m2)/shownM*(horizontal?CW:CH));
+    ctx.fillStyle=i%2===0?LIGHT:DARK;
+    if(horizontal) ctx.fillRect(p0,0,p1-p0+1,CH);
+    else ctx.fillRect(0,p0,CW,p1-p0+1);
+    pos+=m;
+  });
+}
+
+function reliefLine(ctx,fn,lw){
+  ctx.save();
+  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=3;
+  ctx.strokeStyle='rgba(0,0,0,0.4)'; ctx.lineWidth=lw+1.5; fn(); ctx.stroke();
+  ctx.shadowBlur=0; ctx.strokeStyle='#fff'; ctx.lineWidth=lw; fn(); ctx.stroke();
+  ctx.restore();
+}
+
+function drawZubietaStand(ctx,CW,GS){
+  // Sky gradient
+  const sky=ctx.createLinearGradient(0,0,0,GS*0.4);
+  sky.addColorStop(0,'#cdd6dd'); sky.addColorStop(1,'#9aa7b0');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,CW,GS*0.4);
+
+  // Stand roof (dark angled structure)
+  const roofY=GS*0.18, roofH=GS*0.10;
+  ctx.fillStyle='#3a3f44';
+  ctx.beginPath();
+  ctx.moveTo(0,roofY); ctx.lineTo(CW,roofY-GS*0.03);
+  ctx.lineTo(CW,roofY+roofH-GS*0.03); ctx.lineTo(0,roofY+roofH);
+  ctx.closePath(); ctx.fill();
+
+  // Seating area (grey/black seats in rows)
+  const seatTop=roofY+roofH, seatBot=GS*0.78;
+  const seatGrad=ctx.createLinearGradient(0,seatTop,0,seatBot);
+  seatGrad.addColorStop(0,'#8a8478'); seatGrad.addColorStop(1,'#5a564c');
+  ctx.fillStyle=seatGrad;
+  ctx.fillRect(0,seatTop,CW,seatBot-seatTop);
+
+  // Seat rows texture (horizontal lines)
+  ctx.strokeStyle='rgba(20,20,20,0.25)'; ctx.lineWidth=1;
+  const rows=14;
+  for(let i=1;i<rows;i++){
+    const ry=seatTop+(seatBot-seatTop)*i/rows;
+    ctx.beginPath(); ctx.moveTo(0,ry); ctx.lineTo(CW,ry); ctx.stroke();
+  }
+  // Vertical aisle dividers
+  ctx.strokeStyle='rgba(40,35,30,0.3)';
+  const aisles=8;
+  for(let i=0;i<=aisles;i++){
+    const ax=CW*i/aisles;
+    ctx.beginPath(); ctx.moveTo(ax,seatTop); ctx.lineTo(ax,seatBot); ctx.stroke();
+  }
+
+  // Random dark seat dots for texture (sparse crowd look — empty stadium)
+  ctx.fillStyle='rgba(15,15,15,0.4)';
+  const rng=s=>{let x=Math.sin(s)*1e4;return x-Math.floor(x);};
+  for(let i=0;i<200;i++){
+    const sx=rng(i*3.7)*CW, sy=seatTop+rng(i*5.3)*(seatBot-seatTop);
+    ctx.fillRect(sx,sy,2,2);
+  }
+
+  // ── "Z7 TALDEA" banner — horizontal stripes, bold outlined text (no crest) ──
+  {
+    const bnY=seatBot-(seatBot-seatTop)*0.20, bnH=(seatBot-seatTop)*0.20;
+    const bnX=CW*0.06, bnW=CW*0.36;
+    ctx.save();
+    // Banner background — horizontal blue/white stripes (not diagonal)
+    ctx.save();
+    ctx.beginPath(); ctx.rect(bnX,bnY,bnW,bnH); ctx.clip();
+    const stripeN=5;
+    for(let i=0;i<stripeN;i++){
+      ctx.fillStyle=i%2===0?'#1B3F8B':'#ffffff';
+      ctx.fillRect(bnX,bnY+i*(bnH/stripeN),bnW,bnH/stripeN+0.5);
+    }
+    ctx.restore();
+    ctx.strokeStyle='#111'; ctx.lineWidth=1.5; ctx.strokeRect(bnX,bnY,bnW,bnH);
+
+    // Text "Z7 TALDEA" — bold black with white outline, centered in the banner
+    ctx.fillStyle='#ffffff';
+    ctx.font=`900 ${Math.max(10,bnH*0.55)}px Arial`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.lineWidth=Math.max(2,bnH*0.10);
+    ctx.strokeStyle='#ffffff';
+    const textX=bnX+bnW/2, textY=bnY+bnH/2;
+    ctx.strokeText('Z7 TALDEA', textX, textY);
+    ctx.fillStyle='#111';
+    ctx.fillText('Z7 TALDEA', textX, textY);
+    ctx.restore();
+  }
+
+  // Advertising LED-style board behind the goal — repeating sponsor cycle, clean stadium look
+  const bbY=seatBot, bbH=GS-seatBot-2;
+  ctx.save();
+  ctx.beginPath();ctx.rect(0,bbY,CW,bbH);ctx.clip();
+
+  // Base panel — deep blue with a subtle vertical sheen for depth
+  const baseGrad=ctx.createLinearGradient(0,bbY,0,bbY+bbH);
+  baseGrad.addColorStop(0,'#0a6fd6'); baseGrad.addColorStop(0.5,'#0057B8'); baseGrad.addColorStop(1,'#003d85');
+  ctx.fillStyle=baseGrad;
+  ctx.fillRect(0,bbY,CW,bbH);
+
+  // Repeating sponsor cycle, evenly spaced panels with thin separators
+  const sponsors=['REAL SOCIEDAD','LIGA F MOEVE','Z7 TALDEA'];
+  const PANEL_W=Math.max(70,bbH*4.2);
+  const nPanels=Math.ceil(CW/PANEL_W)+1;
+  ctx.font=`900 ${Math.max(7,bbH*0.34)}px Arial`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  for(let i=0;i<nPanels;i++){
+    const px=i*PANEL_W;
+    const txt=sponsors[i%sponsors.length];
+    // Faint alternating tint for subtle panel separation (no harsh white blocks)
+    if(i%2===1){
+      ctx.fillStyle='rgba(255,255,255,0.06)';
+      ctx.fillRect(px,bbY,PANEL_W,bbH);
+    }
+    // Thin separator line
+    ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(px,bbY+3);ctx.lineTo(px,bbY+bbH-3);ctx.stroke();
+    // Sponsor text, crisp white with soft shadow
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.4)';ctx.shadowBlur=2;ctx.shadowOffsetY=1;
+    ctx.fillStyle='#ffffff';
+    ctx.fillText(txt, px+PANEL_W/2, bbY+bbH/2, PANEL_W-10);
+    ctx.restore();
+  }
+
+  // Top highlight line (catches the light like a real LED board edge)
+  ctx.fillStyle='rgba(255,255,255,0.35)';
+  ctx.fillRect(0,bbY,CW,1.5);
+  ctx.restore();
+
+  // Subtle shadow at bottom of billboard (transition to pitch)
+  const shGrad=ctx.createLinearGradient(0,GS-6,0,GS);
+  shGrad.addColorStop(0,'rgba(0,0,0,0)'); shGrad.addColorStop(1,'rgba(0,0,0,0.35)');
+  ctx.fillStyle=shGrad; ctx.fillRect(0,GS-6,CW,6);
+}
+
+function drawField(){
+  const CW=bgC.width,CH=bgC.height;
+  bgCtx.setTransform(1,0,0,1,0,0); bgCtx.clearRect(0,0,CW,CH);
+  const isZubieta=(fieldType==='zubieta'||fieldType==='zubieta-close');
+  const SHOWN=shownDepth, GOAL_SPACE=Math.round(CH*(isZubieta?0.22:0.10)), FH=CH-GOAL_SPACE;
+  const PERSP=0.10;
+  function tx(xm,ym){const t=ym/SHOWN;const ins=CW*PERSP*(1-t);return ins+(xm/PITCH_W)*(CW-2*ins);}
+  function ty(ym){return GOAL_SPACE+ym/SHOWN*FH;}
+
+  // Background — Zubieta stand or plain dark
+  if(fieldType==='zubieta'){
+    drawZubietaStand(bgCtx,CW,GOAL_SPACE);
+  } else {
+    bgCtx.fillStyle='#0e161f'; bgCtx.fillRect(0,0,CW,GOAL_SPACE);
+  }
+
+  // Grass
+  const withS=fieldType!=='checks'; // stripes on all field types except checkered
+  const withChecks=fieldType==='checks';
+  const LIGHT='#5ba84a',DARK='#3d7a2e';
+  if(withChecks){
+    // Checkered pattern: horizontal + vertical stripes create 4-tone squares
+    const C1='#3d7a2e', C2='#4f9e3e', C3='#4a9438', C4='#5ba84a';
+    bgCtx.fillStyle=C1;
+    bgCtx.beginPath();bgCtx.moveTo(tx(0,0),ty(0));bgCtx.lineTo(tx(PITCH_W,0),ty(0));bgCtx.lineTo(tx(PITCH_W,SHOWN),ty(SHOWN));bgCtx.lineTo(tx(0,SHOWN),ty(SHOWN));bgCtx.closePath();bgCtx.fill();
+    const stripeW=68/9, stripeH=SHOWN/9;
+    const patX=[], patY=[];
+    for(let i=0;i<9;i++){patX.push(stripeW);patY.push(stripeH);}
+    let posY=0;
+    patY.forEach((mY,iY)=>{
+      const y0=Math.min(posY,SHOWN),y1=Math.min(posY+mY,SHOWN);
+      if(y0>=SHOWN){posY+=mY;return;}
+      let posX=0;
+      patX.forEach((mX,iX)=>{
+        const x0=Math.min(posX,PITCH_W),x1=Math.min(posX+mX,PITCH_W);
+        if(x0>=PITCH_W){posX+=mX;return;}
+        const light=(iX+iY)%2===0;
+        bgCtx.fillStyle=light?C4:C2;
+        bgCtx.beginPath();
+        bgCtx.moveTo(tx(x0,y0),ty(y0));bgCtx.lineTo(tx(x1,y0),ty(y0));
+        bgCtx.lineTo(tx(x1,y1),ty(y1));bgCtx.lineTo(tx(x0,y1),ty(y1));
+        bgCtx.closePath();bgCtx.fill();
+        posX+=mX;
+      });
+      posY+=mY;
+    });
+  } else if(withS){
+    // Horizontal stripes — band width ~5-6m each, covers the full shownDepth
+    const bandM=5.5; // each stripe ~5.5m wide in real life
+    const nBands=Math.ceil(SHOWN/bandM);
+    bgCtx.fillStyle=DARK;
+    bgCtx.beginPath();bgCtx.moveTo(tx(0,0),ty(0));bgCtx.lineTo(tx(PITCH_W,0),ty(0));bgCtx.lineTo(tx(PITCH_W,SHOWN),ty(SHOWN));bgCtx.lineTo(tx(0,SHOWN),ty(SHOWN));bgCtx.closePath();bgCtx.fill();
+    for(let i=0;i<nBands;i++){
+      const y0=Math.min(i*bandM,SHOWN), y1=Math.min((i+1)*bandM,SHOWN);
+      if(i%2===0){
+        bgCtx.fillStyle=LIGHT;
+        bgCtx.beginPath();bgCtx.moveTo(tx(0,y0),ty(y0));bgCtx.lineTo(tx(PITCH_W,y0),ty(y0));bgCtx.lineTo(tx(PITCH_W,y1),ty(y1));bgCtx.lineTo(tx(0,y1),ty(y1));bgCtx.closePath();bgCtx.fill();
+      }
+    }
+  }
+
+  bgCtx.lineCap='round'; bgCtx.lineJoin='round';
+  function lw(ym){return 1.2+(ym/SHOWN)*2.2;}
+  function pline(pts,w){
+    bgCtx.save();
+    bgCtx.shadowColor='rgba(0,0,0,0.5)';bgCtx.shadowBlur=2;bgCtx.strokeStyle='rgba(0,0,0,0.35)';bgCtx.lineWidth=w+1.5;bgCtx.lineCap='round';
+    bgCtx.beginPath();pts.forEach((p,i)=>i===0?bgCtx.moveTo(p[0],p[1]):bgCtx.lineTo(p[0],p[1]));bgCtx.stroke();
+    bgCtx.shadowBlur=0;bgCtx.strokeStyle='#fff';bgCtx.lineWidth=w;
+    bgCtx.beginPath();pts.forEach((p,i)=>i===0?bgCtx.moveTo(p[0],p[1]):bgCtx.lineTo(p[0],p[1]));bgCtx.stroke();
+    bgCtx.restore();
+  }
+  function prect(x0,y0,x1,y1){const w=(lw(y0)+lw(y1))/2;pline([[tx(x0,y0),ty(y0)],[tx(x1,y0),ty(y0)],[tx(x1,y1),ty(y1)],[tx(x0,y1),ty(y1)],[tx(x0,y0),ty(y0)]],w);}
+  function parc(xcm,ycm,rm,a0,a1,steps=50){
+    const pts=[];for(let i=0;i<=steps;i++){const a=a0+(a1-a0)*i/steps;const xf=xcm+Math.cos(a)*rm,yf=ycm+Math.sin(a)*rm;if(xf>=0&&xf<=PITCH_W&&yf>=0&&yf<=SHOWN)pts.push([tx(xf,yf),ty(yf)]);}
+    if(pts.length>1)pline(pts,lw(ycm));
+  }
+
+  pline([[tx(0,0),ty(0)],[tx(PITCH_W,0),ty(0)],[tx(PITCH_W,SHOWN),ty(SHOWN)],[tx(0,SHOWN),ty(SHOWN)],[tx(0,0),ty(0)]],2.5);
+  pline([[tx(0,SHOWN),ty(SHOWN)],[tx(PITCH_W,SHOWN),ty(SHOWN)]],2);
+  prect((PITCH_W-PA_W)/2,0,(PITCH_W+PA_W)/2,PA_D);
+  prect((PITCH_W-GA_W)/2,0,(PITCH_W+GA_W)/2,GA_D);
+  bgCtx.fillStyle='#fff';bgCtx.beginPath();bgCtx.arc(tx(34,PEN),ty(PEN),2.5,0,Math.PI*2);bgCtx.fill();
+  // Penalty arc
+  {const pts=[];for(let i=0;i<=60;i++){const a=Math.PI*0.1+(Math.PI*0.8)*i/60;const xf=34+Math.cos(a)*ARC_R,yf=PEN+Math.sin(a)*ARC_R;if(yf>=PA_D&&yf<=SHOWN&&xf>=0&&xf<=PITCH_W)pts.push([tx(xf,yf),ty(yf)]);}if(pts.length>1)pline(pts,lw(PA_D+1));}
+  // Centre circle
+  const showHalf=fieldType==='half'||fieldType==='checks'||isZubieta;
+  if(showHalf){
+    const pts=[];for(let i=0;i<=50;i++){const a=0+Math.PI*i/50;const xf=34+Math.cos(a)*CC_R,yf=SHOWN+Math.sin(a)*CC_R;if(yf>=0&&yf<=SHOWN)pts.push([tx(xf,yf),ty(yf)]);}
+    if(pts.length>1)pline(pts,lw(SHOWN));
+    bgCtx.fillStyle='#fff';bgCtx.beginPath();bgCtx.arc(tx(34,SHOWN),ty(SHOWN),3,0,Math.PI*2);bgCtx.fill();
+  }
+  // Corner arcs + 9.15m marks
+  bgCtx.save();bgCtx.beginPath();bgCtx.rect(0,0,CW,CH);bgCtx.clip();
+  parc(0,0,CORNER_R,0,Math.PI/2,12);parc(PITCH_W,0,CORNER_R,Math.PI/2,Math.PI,12);
+  bgCtx.restore();
+  // 9.15m marks — ticks outside field at corners (4 total)
+  const TICK=12;
+  // Along goal line (top): ticks point upward (above goal line = above canvas)
+  [[9.15,0],[PITCH_W-9.15,0]].forEach(([xm,ym])=>{
+    const p=[tx(xm,ym),ty(ym)];
+    pline([[p[0],p[1]-TICK],[p[0],p[1]]],2);
+  });
+  // Along touchlines (sides): ticks point outward (beyond touchline)
+  [[0,9.15],[PITCH_W,9.15]].forEach(([xm,ym])=>{
+    const p=[tx(xm,ym),ty(ym)];
+    const outX = xm===0 ? p[0]-TICK : p[0]+TICK;
+    pline([[outX,p[1]],[p[0],p[1]]],2);
+  });
+
+  // GOAL 3D
+  const GX0=(PITCH_W-GOAL_W)/2,GX1=(PITCH_W+GOAL_W)/2;
+  const px0=tx(GX0,0),px1=tx(GX1,0),pgy=ty(0);
+  const gPxW=px1-px0, POST_H=gPxW*(2.44/7.32), NET_DX=gPxW*0.04;
+  const ptopY=pgy-POST_H, pnet0x=px0+NET_DX, pnet1x=px1-NET_DX, pnetY=ptopY-POST_H*0.3, pnetBotY=pgy-POST_H*0.3;
+  bgCtx.save();
+  bgCtx.fillStyle='rgba(180,220,180,0.07)';
+  bgCtx.beginPath();bgCtx.moveTo(px0,ptopY);bgCtx.lineTo(px1,ptopY);bgCtx.lineTo(pnet1x,pnetY);bgCtx.lineTo(pnet0x,pnetY);bgCtx.closePath();bgCtx.fill();
+  bgCtx.fillStyle='rgba(180,220,180,0.04)';
+  bgCtx.beginPath();bgCtx.moveTo(px0,pgy);bgCtx.lineTo(px1,pgy);bgCtx.lineTo(pnet1x,pnetBotY);bgCtx.lineTo(pnet0x,pnetBotY);bgCtx.closePath();bgCtx.fill();
+  bgCtx.strokeStyle='rgba(255,255,255,0.2)';bgCtx.lineWidth=0.6;
+  for(let i=0;i<=8;i++){const t=i/8;bgCtx.beginPath();bgCtx.moveTo(px0+(px1-px0)*t,pgy);bgCtx.lineTo(pnet0x+(pnet1x-pnet0x)*t,pnetBotY);bgCtx.stroke();bgCtx.beginPath();bgCtx.moveTo(px0+(px1-px0)*t,ptopY);bgCtx.lineTo(pnet0x+(pnet1x-pnet0x)*t,pnetY);bgCtx.stroke();}
+  for(let i=0;i<=4;i++){const t=i/4;bgCtx.beginPath();bgCtx.moveTo(px0+(pnet0x-px0)*t,pgy+(pnetBotY-pgy)*t);bgCtx.lineTo(px1+(pnet1x-px1)*t,pgy+(pnetBotY-pgy)*t);bgCtx.stroke();}
+  bgCtx.lineCap='round';bgCtx.lineWidth=4;bgCtx.shadowColor='rgba(0,0,0,0.7)';bgCtx.shadowBlur=5;bgCtx.strokeStyle='#fff';
+  bgCtx.beginPath();bgCtx.moveTo(px0,pgy);bgCtx.lineTo(px0,ptopY);bgCtx.stroke();
+  bgCtx.beginPath();bgCtx.moveTo(px1,pgy);bgCtx.lineTo(px1,ptopY);bgCtx.stroke();
+  bgCtx.beginPath();bgCtx.moveTo(px0,ptopY);bgCtx.lineTo(px1,ptopY);bgCtx.stroke();
+  bgCtx.shadowBlur=0;bgCtx.strokeStyle='rgba(255,255,255,0.5)';bgCtx.lineWidth=2;
+  [[px0,ptopY,pnet0x,pnetY],[px1,ptopY,pnet1x,pnetY],[px0,pgy,pnet0x,pnetBotY],[px1,pgy,pnet1x,pnetBotY],[pnet0x,pnetY,pnet1x,pnetY],[pnet0x,pnetBotY,pnet1x,pnetBotY]].forEach(([x1,y1,x2,y2])=>{bgCtx.beginPath();bgCtx.moveTo(x1,y1);bgCtx.lineTo(x2,y2);bgCtx.stroke();});
+  bgCtx.restore();
+}
+
+
+
+// ═══ FIELD ↔ CANVAS COORDS (mirrors drawField's tx/ty) ════
+// Used by play templates to place elements using meters (0-68 x, 0-shownDepth y, goal at y=0)
+function fieldXY(xm,ym){
+  const CW=bgC.width,CH=bgC.height;
+  const SHOWN=shownDepth, GOAL_SPACE=Math.round(CH*(fieldType==='zubieta'||fieldType==='zubieta-close'?0.22:0.10)), FH=CH-GOAL_SPACE;
+  const PERSP=0.10;
+  const t=ym/SHOWN, ins=CW*PERSP*(1-t);
+  const x=ins+(xm/PITCH_W)*(CW-2*ins);
+  const y=GOAL_SPACE+ym/SHOWN*FH;
+  return [x,y];
+}
+// Mirror an x-meter coordinate horizontally (for ballSide==='right' templates)
+function mirrorX(xm){return PITCH_W-xm;}
+
+// ═══ DRAW ELEMENTS ════════════════════════════════════
+function redrawAll(){
+  elCtx.setTransform(1,0,0,1,0,0);elCtx.clearRect(0,0,elC.width,elC.height);
+  elements.forEach(el=>{
+    if(el.type==='rso') drawRSO(elCtx,el);
+    else if(el.type==='rso2') drawRSO2(elCtx,el);
+    else if(el.type==='rival') drawRival(elCtx,el);
+    else if(el.type==='ball') drawBall(elCtx,el);
+    else if(el.type==='cone') drawCone(elCtx,el);
+    else if(el.type==='mark') drawMark(elCtx,el);
+    else if(el.type==='text') drawText(elCtx,el);
+  });
+  // Resize handle for a selected text label (drag to grow/shrink, like arrow endpoints)
+  if(tool==='move' && selectedEl && selectedEl.type==='text' && elements.includes(selectedEl)){
+    const sz=selectedEl.size||14;
+    const tw=(selectedEl._box?(selectedEl.label.length*sz*0.62+14):selectedEl.label.length*sz*0.6);
+    const hh=selectedEl._box?(sz+8):sz;
+    const hx=selectedEl.x+tw/2, hy=selectedEl.y+hh/2;
+    elCtx.save();
+    elCtx.strokeStyle='rgba(255,221,68,0.6)';elCtx.lineWidth=1;elCtx.setLineDash([3,3]);
+    elCtx.strokeRect(selectedEl.x-tw/2,selectedEl.y-hh/2,tw,hh);
+    elCtx.setLineDash([]);
+    elCtx.fillStyle='rgba(255,221,68,0.95)';elCtx.strokeStyle='rgba(0,0,0,0.6)';elCtx.lineWidth=1.5;
+    elCtx.beginPath();elCtx.arc(hx,hy,6,0,Math.PI*2);elCtx.fill();elCtx.stroke();
+    elCtx.restore();
+  }
+  drwCtx.setTransform(1,0,0,1,0,0);drwCtx.clearRect(0,0,drwC.width,drwC.height);
+  drawings.forEach(d=>{
+    if(d.type==='zone') drawZone(drwCtx,d);
+    else if(d.type==='circle') drawCircle(drwCtx,d);
+    else drawArrow(drwCtx,d);
+  });
+  // Show handles ONLY for selectedDrw
+  if(tool==='move' && selectedDrw){
+    const d=selectedDrw;
+    drwCtx.save();
+    drwCtx.fillStyle='rgba(255,255,255,0.9)';drwCtx.strokeStyle='rgba(0,0,0,0.5)';drwCtx.lineWidth=1.5;
+    if(d.type==='circle'){
+      [[1,0],[-1,0],[0,1],[0,-1]].forEach(([hx,hy])=>{drwCtx.beginPath();drwCtx.arc(d.cx+hx*d.r,d.cy+hy*d.r,5,0,Math.PI*2);drwCtx.fill();drwCtx.stroke();});
+    } else if(d.type==='zone'){
+      [[d.x,d.y],[d.x+d.w,d.y],[d.x,d.y+d.h],[d.x+d.w,d.y+d.h]].forEach(([hx,hy])=>{drwCtx.beginPath();drwCtx.arc(hx,hy,5,0,Math.PI*2);drwCtx.fill();drwCtx.stroke();});
+    } else if(d.type==='curve'){
+      // Endpoint handles (white)
+      drwCtx.fillStyle='rgba(255,255,255,0.9)';drwCtx.strokeStyle='rgba(0,0,0,0.5)';drwCtx.lineWidth=1.5;
+      [[d.x1,d.y1],[d.x2,d.y2]].forEach(([hx,hy])=>{drwCtx.beginPath();drwCtx.arc(hx,hy,5,0,Math.PI*2);drwCtx.fill();drwCtx.stroke();});
+      // Control point handles (amber) + guide lines
+      if(d.cp1x!==undefined){
+        drwCtx.strokeStyle='rgba(255,180,0,0.4)';drwCtx.lineWidth=1;drwCtx.setLineDash([3,3]);
+        drwCtx.beginPath();drwCtx.moveTo(d.x1,d.y1);drwCtx.lineTo(d.cp1x,d.cp1y);drwCtx.stroke();
+        drwCtx.beginPath();drwCtx.moveTo(d.x2,d.y2);drwCtx.lineTo(d.cp2x,d.cp2y);drwCtx.stroke();
+        drwCtx.setLineDash([]);
+        drwCtx.fillStyle='rgba(255,180,0,0.95)';drwCtx.strokeStyle='rgba(0,0,0,0.6)';drwCtx.lineWidth=1.5;
+        drwCtx.beginPath();drwCtx.arc(d.cp1x,d.cp1y,7,0,Math.PI*2);drwCtx.fill();drwCtx.stroke();
+        drwCtx.beginPath();drwCtx.arc(d.cp2x,d.cp2y,7,0,Math.PI*2);drwCtx.fill();drwCtx.stroke();
+        // Label the two handles subtly
+        drwCtx.fillStyle='rgba(0,0,0,0.7)';drwCtx.font='bold 8px Arial';drwCtx.textAlign='center';drwCtx.textBaseline='middle';
+        drwCtx.fillText('1',d.cp1x,d.cp1y);
+        drwCtx.fillText('2',d.cp2x,d.cp2y);
+      }
+    } else {
+      [[d.x1,d.y1],[d.x2,d.y2]].forEach(([hx,hy])=>{drwCtx.beginPath();drwCtx.arc(hx,hy,5,0,Math.PI*2);drwCtx.fill();drwCtx.stroke();});
+    }
+    drwCtx.restore();
+  }
+}
+
+function drawKitCircle(ctx,el,kitImg,borderColor,fallbackFn){
+  const x=el.x,y=el.y,r=el.r||14;
+  ctx.save();
+  ctx.imageSmoothingEnabled=true;
+  ctx.imageSmoothingQuality='high';
+  ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=5;
+  // Clip to circle
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();
+  if(kitImg&&kitImg.complete&&kitImg.naturalWidth>0){
+    // Fill background first (handles any transparent/semi-transparent edges)
+    ctx.fillStyle=borderColor;ctx.fillRect(x-r,y-r,r*2,r*2);
+    // Fill circle exactly — new kit photos have no white margins
+    ctx.drawImage(kitImg,x-r,y-r,r*2,r*2);
+  } else {
+    fallbackFn(ctx,x,y,r);
+  }
+  ctx.shadowBlur=0;
+  // Border ring
+  ctx.strokeStyle=borderColor;ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+  // Inner highlight
+  ctx.strokeStyle='rgba(255,255,255,0.28)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(x,y,r-1.5,0,Math.PI*2);ctx.stroke();
+  ctx.restore();
+  if(el.blocked) drawBlockMark(ctx,x,y,r);
+}
+function drawRSO(ctx,el){
+  drawKitCircle(ctx,el,KIT_IMG_1,'#0a1a3d',
+    (c,x,y,r)=>{
+      c.fillStyle='#0a1a3d';c.fillRect(x-r,y-r,r*2,r*2);
+      c.fillStyle='#ffffff';
+      [-r*0.72,-r*0.06,r*0.60].forEach(ox=>c.fillRect(x+ox,y-r,r*0.38,r*2));
+    }
+  );
+}
+// 2nd kit — black
+function drawRSO2(ctx,el){
+  drawKitCircle(ctx,el,KIT_IMG_2,'#111111',
+    (c,x,y,r)=>{c.fillStyle='#111';c.fillRect(x-r,y-r,r*2,r*2);}
+  );
+}
+function drawBlockMark(ctx,x,y,r){
+  ctx.save();
+  const s=r*0.95;
+  ctx.lineCap='round';
+  ctx.strokeStyle='rgba(0,0,0,0.55)';ctx.lineWidth=4.5;
+  ctx.beginPath();ctx.moveTo(x-s,y-s);ctx.lineTo(x+s,y+s);ctx.moveTo(x+s,y-s);ctx.lineTo(x-s,y+s);ctx.stroke();
+  ctx.strokeStyle='#f0901a';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(x-s,y-s);ctx.lineTo(x+s,y+s);ctx.moveTo(x+s,y-s);ctx.lineTo(x-s,y+s);ctx.stroke();
+  ctx.restore();
+}
+function drawRival(ctx,el){
+  const x=el.x,y=el.y,r=el.r||14;
+  const rv=RIVALS[el.rivalKey]||{pattern:'solid',c1:'#888',c2:'#888',border:'#555',gk:'#888'};
+  const isGK=el.isGK;
+  ctx.save();
+  ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=5;
+
+  // Base circle
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+
+  if(isGK){
+    // Goalkeeper: solid color
+    ctx.fillStyle=rv.gk;ctx.fill();
+  } else if(rv.pattern==='stripes'){
+    // Vertical stripe pattern (jersey style)
+    ctx.fillStyle=rv.c1;ctx.fill();
+    ctx.save();
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();
+    ctx.fillStyle=rv.c2;
+    const stripeW=r*0.42;
+    ctx.fillRect(x-r*0.62,y-r,stripeW,r*2);
+    ctx.fillRect(x+r*0.20,y-r,stripeW,r*2);
+    ctx.restore();
+  } else if(rv.pattern==='halves'){
+    // Split kit: left half c1, right half c2
+    ctx.fillStyle=rv.c1;ctx.fill();
+    ctx.save();
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();
+    ctx.fillStyle=rv.c2;
+    ctx.fillRect(x,y-r,r,r*2);
+    ctx.restore();
+  } else if(rv.pattern==='halves-h'){
+    // Split kit: top half c1, bottom half c2
+    ctx.fillStyle=rv.c1;ctx.fill();
+    ctx.save();
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();
+    ctx.fillStyle=rv.c2;
+    ctx.fillRect(x-r,y,r*2,r);
+    ctx.restore();
+  } else if(rv.pattern==='stripes-h'){
+    // Horizontal stripes
+    ctx.fillStyle=rv.c1;ctx.fill();
+    ctx.save();
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();
+    ctx.fillStyle=rv.c2;
+    const stripeH=r*0.42;
+    ctx.fillRect(x-r,y-r*0.62,r*2,stripeH);
+    ctx.fillRect(x-r,y+r*0.20,r*2,stripeH);
+    ctx.restore();
+  } else {
+    // Solid kit
+    ctx.fillStyle=rv.c1;ctx.fill();
+  }
+
+  ctx.shadowBlur=0;
+  // Border ring — team color (thicker for identity)
+  ctx.strokeStyle=isGK?'rgba(255,255,255,0.6)':rv.border;
+  ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+  // Inner highlight ring for depth
+  ctx.strokeStyle='rgba(255,255,255,0.25)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(x,y,r-1.5,0,Math.PI*2);ctx.stroke();
+
+  ctx.restore();
+  if(el.blocked) drawBlockMark(ctx,x,y,r);
+}
+function drawBall(ctx,el){
+  const x=el.x,y=el.y,r=(el.r||8)*.85;
+  ctx.save();ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=r*.8;ctx.shadowOffsetY=r*.4;
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.01)';ctx.fill();
+  ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();
+  const base=ctx.createRadialGradient(x-r*.2,y-r*.25,0,x,y,r*1.1);
+  base.addColorStop(0,'#fff');base.addColorStop(0.6,'#f0f0ee');base.addColorStop(1,'#d8d8d4');
+  ctx.fillStyle=base;ctx.fillRect(x-r,y-r,r*2,r*2);
+  ctx.fillStyle='#111';
+  [[0,-.3,.285],[.52,-.1,.245],[.32,.44,.245],[-.32,.44,.245],[-.52,-.1,.245]].forEach(([dx,dy,pr])=>{
+    ctx.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;i===0?ctx.moveTo(x+dx*r+Math.cos(a)*pr*r,y+dy*r+Math.sin(a)*pr*r):ctx.lineTo(x+dx*r+Math.cos(a)*pr*r,y+dy*r+Math.sin(a)*pr*r);}
+    ctx.closePath();ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=r*.05;ctx.stroke();
+  });
+  const shade=ctx.createRadialGradient(x-r*.15,y-r*.2,r*.05,x+r*.1,y+r*.15,r);
+  shade.addColorStop(0,'rgba(255,255,255,0)');shade.addColorStop(.65,'rgba(0,0,0,0)');shade.addColorStop(1,'rgba(0,0,0,0.28)');
+  ctx.fillStyle=shade;ctx.fillRect(x-r,y-r,r*2,r*2);
+  ctx.restore();
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=r*.07;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+  ctx.save();ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();
+  const hl=ctx.createRadialGradient(x-r*.3,y-r*.32,0,x-r*.2,y-r*.2,r*.5);
+  hl.addColorStop(0,'rgba(255,255,255,0.55)');hl.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=hl;ctx.fillRect(x-r,y-r,r*2,r*2);ctx.restore();
+}
+function drawCone(ctx,el){
+  ctx.save();ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=3;
+  ctx.fillStyle=el.color||'#f0901a';ctx.beginPath();ctx.moveTo(el.x,el.y-9);ctx.lineTo(el.x-6,el.y+5);ctx.lineTo(el.x+6,el.y+5);ctx.closePath();ctx.fill();ctx.restore();
+}
+function drawMark(ctx,el){
+  const r=el.r||7;ctx.save();ctx.shadowColor='rgba(0,0,0,0.4)';ctx.shadowBlur=3;
+  ctx.fillStyle=el.color||'#ef4444';ctx.beginPath();ctx.ellipse(el.x,el.y,r,r*.45,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(el.x,el.y,r,r*.45,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+}
+function drawText(ctx,el){
+  const sz=el.size||14, x=el.x, y=el.y;
+  ctx.save();
+  ctx.font=`bold ${sz}px "Barlow Condensed",Arial`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  if(el._box){
+    const tw=ctx.measureText(el.label).width;
+    const padX=7,padY=4,bw=tw+padX*2,bh=sz+padY*2;
+    ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=4;ctx.shadowOffsetY=2;
+    ctx.fillStyle='#ffffff';
+    ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,3);ctx.fill();
+    ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+    ctx.strokeStyle=el.boxBorder||(el.color==='#ef4444'?'#ef4444':'#0057B8');ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,3);ctx.stroke();
+    ctx.fillStyle=el.textColor||'#111';
+    ctx.fillText(el.label,x,y+1);
+    ctx.restore();
+    return;
+  }
+  // Shadow for readability on any background
+  ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=4; ctx.shadowOffsetX=1; ctx.shadowOffsetY=1;
+  ctx.fillStyle=el.color||'#ffffff';
+  ctx.fillText(el.label,x,y);
+  ctx.restore();
+}
+function drawZone(ctx,d){
+  let x0,y0,w,h;
+  if(d.w!==undefined){x0=d.x;y0=d.y;w=d.w;h=d.h;}
+  else{x0=Math.min(d.x1,d.x2);y0=Math.min(d.y1,d.y2);w=Math.abs(d.x2-d.x1);h=Math.abs(d.y2-d.y1);}
+  if(w<3||h<3)return;
+  ctx.save();
+  const grad=ctx.createLinearGradient(x0,y0,x0+w,y0+h);
+  grad.addColorStop(0,hexToRgba(d.color,.38));grad.addColorStop(1,hexToRgba(d.color,.12));
+  ctx.fillStyle=grad;ctx.fillRect(x0,y0,w,h);
+  ctx.shadowColor='rgba(0,0,0,0.25)';ctx.shadowBlur=5;ctx.shadowOffsetY=3;
+  ctx.strokeStyle=d.color;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.strokeRect(x0,y0,w,h);
+  ctx.setLineDash([]);ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.restore();
+}
+function drawCircle(ctx,d){
+  const cx=d.cx,cy=d.cy,r=d.r||20;if(r<3)return;
+  ctx.save();
+  const grad=ctx.createRadialGradient(cx-r*.2,cy-r*.2,r*.1,cx,cy,r);
+  grad.addColorStop(0,hexToRgba(d.color,.35));grad.addColorStop(1,hexToRgba(d.color,.08));
+  ctx.fillStyle=grad;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+  ctx.shadowColor='rgba(0,0,0,0.3)';ctx.shadowBlur=6;ctx.shadowOffsetY=3;
+  ctx.strokeStyle=d.color;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  ctx.setLineDash([]);ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.restore();
+}
+function drawArrow(ctx,d){
+  ctx.save();ctx.lineCap='round';
+  const H=ctx.canvas.height;
+  function lwAt(y,base){return lineScale*((base||1.8)*0.7+((base||1.8)*0.6)*(y/H));}
+  function drawSeg(pts,color,hasArrow,dashed,baseLw){
+    for(let i=0;i<pts.length-1;i++){
+      const lw=(lwAt(pts[i][1],baseLw)+lwAt(pts[i+1][1],baseLw))/2;
+      ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=lw+2;ctx.shadowColor='rgba(0,0,0,0.3)';ctx.shadowBlur=4;ctx.shadowOffsetY=2;
+      if(dashed)ctx.setLineDash([7,5]);ctx.beginPath();ctx.moveTo(pts[i][0],pts[i][1]);ctx.lineTo(pts[i+1][0],pts[i+1][1]);ctx.stroke();
+      ctx.setLineDash([]);ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+      ctx.strokeStyle=color;ctx.lineWidth=lw;
+      if(dashed)ctx.setLineDash([7,5]);ctx.beginPath();ctx.moveTo(pts[i][0],pts[i][1]);ctx.lineTo(pts[i+1][0],pts[i+1][1]);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    if(hasArrow&&pts.length>1){
+      const last=pts[pts.length-1],prev=pts[pts.length-2];
+      const ang=Math.atan2(last[1]-prev[1],last[0]-prev[0]),hs=8+lwAt(last[1],baseLw);
+      ctx.fillStyle=color;ctx.shadowColor='rgba(0,0,0,0.4)';ctx.shadowBlur=3;ctx.shadowOffsetY=1;
+      ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(last[0]-hs*Math.cos(ang-.38),last[1]-hs*Math.sin(ang-.38));ctx.lineTo(last[0]-hs*Math.cos(ang+.38),last[1]-hs*Math.sin(ang+.38));ctx.closePath();ctx.fill();
+      ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+    }
+  }
+  if(d.type==='curve'){
+    // Cubic Bézier: two independent control points (cp1 near start, cp2 near end).
+    // Both are draggable handles. Default auto-computes a gentle upward arc.
+    if(d.cp1x===undefined){
+      const mx=(d.x1+d.x2)/2,my=(d.y1+d.y2)/2;
+      const dx2=d.x2-d.x1,dy2=d.y2-d.y1,dist=Math.max(1,Math.hypot(dx2,dy2));
+      const arcH=dist*0.30;
+      const px=-dy2/dist, py=dx2/dist;
+      const flip=d.curveFlip||1;
+      // cp1 at 1/3 of the way, cp2 at 2/3, both lifted upward
+      d.cp1x=(d.x1+mx)/2 + px*arcH*flip; d.cp1y=(d.y1+my)/2 + py*arcH*flip - arcH*1.0;
+      d.cp2x=(mx+d.x2)/2 + px*arcH*flip; d.cp2y=(my+d.y2)/2 + py*arcH*flip - arcH*1.0;
+    }
+    const N=40,pts=[];
+    for(let i=0;i<=N;i++){
+      const t=i/N,u=1-t;
+      pts.push([
+        u*u*u*d.x1 + 3*u*u*t*d.cp1x + 3*u*t*t*d.cp2x + t*t*t*d.x2,
+        u*u*u*d.y1 + 3*u*u*t*d.cp1y + 3*u*t*t*d.cp2y + t*t*t*d.y2
+      ]);
+    }
+    drawSeg(pts,d.color,true,false,d.lw||1.8);
+  } else {
+    const dx2=d.x2-d.x1,dy2=d.y2-d.y1,len=Math.hypot(dx2,dy2);
+    if(len<4){ctx.restore();return;}
+    drawSeg([[d.x1,d.y1],[d.x2,d.y2]],d.color,d.type==='arrow'||d.type==='block'||d.type==='darrow',d.type==='dline'||d.type==='darrow',d.lw||1.8);
+  }
+  ctx.restore();
+}
+
+// ═══ POINTER EVENTS ══════════════════════════════════
+function gp(e){const r=uiC.getBoundingClientRect();return{x:(e.clientX-r.left)/zoom,y:(e.clientY-r.top)/zoom};}
+function hitEl(x,y){
+  for(let i=elements.length-1;i>=0;i--){
+    const e=elements[i];
+    if(e.type==='text'){
+      const sz=e.size||14, w=e.label.length*sz*0.6, h=sz;
+      if(x>=e.x-w/2&&x<=e.x+w/2&&y>=e.y-h/2&&y<=e.y+h/2)return e;
+    } else {
+      const r=e.r||14;if(Math.hypot(x-e.x,y-e.y)<r+3)return e;
+    }
+  }return null;
+}
+function hitDrw(x,y){
+  const T=12;
+  for(let i=drawings.length-1;i>=0;i--){
+    const d=drawings[i];
+    if(d.type==='circle'){if(Math.hypot(x-d.cx,y-d.cy)<=d.r+T)return d;}
+    else if(d.type==='zone'){if(x>=d.x-T&&x<=d.x+d.w+T&&y>=d.y-T&&y<=d.y+d.h+T)return d;}
+    else{const dx=d.x2-d.x1,dy=d.y2-d.y1,len2=dx*dx+dy*dy;if(len2<1)continue;const t=Math.max(0,Math.min(1,((x-d.x1)*dx+(y-d.y1)*dy)/len2));if(Math.hypot(x-d.x1-t*dx,y-d.y1-t*dy)<T)return d;}
+  }return null;
+}
+uiC.addEventListener('mousedown',e=>{
+  const{x,y}=gp(e);lastMouse={x,y};
+  if(tool==='erase'){doErase(x,y);return;}
+  if(tool==='text'){doText(x,y);return;}
+  if(tool==='block'){
+    const h=hitEl(x,y);
+    if(h&&(h.type==='rso'||h.type==='rso2'||h.type==='rival')){
+      pushUndo();h.blocked=!h.blocked;redrawAll();
+    }
+    return;
+  }
+  if(tool==='label'){
+    if(!pendingLabel)return;
+    pushUndo();
+    elements.push({type:'text',x,y,label:pendingLabel.label,color:'#ffffff',
+      textColor:pendingLabel.textColor,boxBorder:pendingLabel.boxBorder,size:11,_box:true});
+    redrawAll();
+    return;
+  }
+  if(tool==='move'){
+    // Resize handle of a selected text label takes priority
+    if(selectedEl&&selectedEl.type==='text'){
+      const sz=selectedEl.size||14;
+      const tw=(selectedEl._box?(selectedEl.label.length*sz*0.62+14):selectedEl.label.length*sz*0.6);
+      const hh=selectedEl._box?(sz+8):sz;
+      const hx=selectedEl.x+tw/2, hy=selectedEl.y+hh/2;
+      if(Math.hypot(x-hx,y-hy)<10){
+        pushUndo();dragEl=null;dragTextResize=selectedEl;
+        dragTextStart={size:selectedEl.size||14};doff={x,y};
+        return;
+      }
+    }
+    const h=hitEl(x,y);
+    if(h){
+      pushUndo();dragEl=h;doff={x:x-h.x,y:y-h.y};selectedDrw=null;
+      selectedEl=(h.type==='text')?h:null;
+      redrawAll();return;
+    }
+    selectedEl=null;
+    const EP=12;
+    // Check handles of selectedDrw first
+    if(selectedDrw){
+      const d=selectedDrw;
+      if(d.type==='curve'&&d.cp1x!==undefined){
+        if(Math.hypot(x-d.cp1x,y-d.cp1y)<EP+2){pushUndo();dragDrw=d;dragDrwStart={...d};doff={x,y};dragDrw._ep='cp1';return;}
+        if(Math.hypot(x-d.cp2x,y-d.cp2y)<EP+2){pushUndo();dragDrw=d;dragDrwStart={...d};doff={x,y};dragDrw._ep='cp2';return;}
+      }
+      if(d.type!=='circle'&&d.type!=='zone'){
+        if(Math.hypot(x-d.x2,y-d.y2)<EP){pushUndo();selectedDrw=d;dragDrw=d;dragDrwStart={...d};doff={x,y};dragDrw._ep='end';redrawAll();return;}
+        if(Math.hypot(x-d.x1,y-d.y1)<EP){pushUndo();selectedDrw=d;dragDrw=d;dragDrwStart={...d};doff={x,y};dragDrw._ep='start';redrawAll();return;}
+      }
+    }
+    for(let i=drawings.length-1;i>=0;i--){
+      const d=drawings[i];
+      if(d.type==='circle'){
+        const dist=Math.hypot(x-d.cx,y-d.cy);
+        if(dist>d.r-EP&&dist<d.r+EP){pushUndo();selectedDrw=d;dragDrw=d;dragDrwStart={cx:d.cx,cy:d.cy,r:d.r};doff={x,y};dragDrw._ep='resize';redrawAll();return;}
+        if(dist<d.r){pushUndo();selectedDrw=d;dragDrw=d;dragDrwStart={cx:d.cx,cy:d.cy,r:d.r};doff={x,y};dragDrw._ep='move';redrawAll();return;}
+      } else if(d.type==='zone'){
+        const corners=[[d.x,d.y,'tl'],[d.x+d.w,d.y,'tr'],[d.x,d.y+d.h,'bl'],[d.x+d.w,d.y+d.h,'br']];
+        let hit=false;for(const c of corners)if(Math.hypot(x-c[0],y-c[1])<EP){pushUndo();dragDrw=d;dragDrwStart={x:d.x,y:d.y,w:d.w,h:d.h};doff={x,y};dragDrw._ep=c[2];hit=true;break;}
+        if(hit)return;
+        if(x>=d.x&&x<=d.x+d.w&&y>=d.y&&y<=d.y+d.h){pushUndo();selectedDrw=d;dragDrw=d;dragDrwStart={x:d.x,y:d.y,w:d.w,h:d.h};doff={x,y};dragDrw._ep='move';redrawAll();return;}
+      } else {
+
+        if(Math.hypot(x-d.x2,y-d.y2)<EP){pushUndo();selectedDrw=d;dragDrw=d;dragDrwStart={...d};doff={x,y};dragDrw._ep='end';redrawAll();return;}
+        if(Math.hypot(x-d.x1,y-d.y1)<EP){pushUndo();selectedDrw=d;dragDrw=d;dragDrwStart={...d};doff={x,y};dragDrw._ep='start';redrawAll();return;}
+        const dx=d.x2-d.x1,dy=d.y2-d.y1,len2=dx*dx+dy*dy;
+        if(len2>1){const t=Math.max(0,Math.min(1,((x-d.x1)*dx+(y-d.y1)*dy)/len2));if(Math.hypot(x-d.x1-t*dx,y-d.y1-t*dy)<EP){pushUndo();dragDrw=d;dragDrwStart={...d};doff={x,y};dragDrw._ep='move';return;}}
+      }
+    }
+    // Click on empty space: pan if zoomed in, otherwise deselect
+    selectedDrw=null;redrawAll();
+    if(zoom>1){
+      panning=true;
+      panStart={x:e.clientX,y:e.clientY};
+      panStartXY={x:panX,y:panY};
+      uiC.style.cursor='grabbing';
+    }
+    return;
+  }
+  pushUndo();drawing=true;ds={x,y};
+});
+uiC.addEventListener('mousemove',e=>{
+  const{x,y}=gp(e);lastMouse={x,y};
+  if(panning){
+    panX=panStartXY.x+(e.clientX-panStart.x);
+    panY=panStartXY.y+(e.clientY-panStart.y);
+    clampPan();
+    applyTransform();
+    return;
+  }
+  if(dragEl){dragEl.x=x-doff.x;dragEl.y=y-doff.y;redrawAll();return;}
+  if(dragTextResize){
+    const dist=Math.hypot(x-dragTextResize.x,y-dragTextResize.y);
+    const newSize=Math.max(8,Math.min(60,Math.round(dist*0.45)));
+    dragTextResize.size=newSize;
+    redrawAll();return;
+  }
+  if(dragDrw){
+    const ep=dragDrw._ep||'move',dx=x-doff.x,dy=y-doff.y;
+    if(dragDrw.type==='circle'){
+      if(ep==='resize')dragDrw.r=Math.hypot(x-dragDrwStart.cx,y-dragDrwStart.cy);
+      else{dragDrw.cx=dragDrwStart.cx+dx;dragDrw.cy=dragDrwStart.cy+dy;}
+    } else if(dragDrw.type==='zone'){
+      if(ep==='move'){dragDrw.x=dragDrwStart.x+dx;dragDrw.y=dragDrwStart.y+dy;}
+      else if(ep==='br'){dragDrw.w=Math.max(10,dragDrwStart.w+dx);dragDrw.h=Math.max(10,dragDrwStart.h+dy);}
+      else if(ep==='bl'){const nw=Math.max(10,dragDrwStart.w-dx);dragDrw.x=dragDrwStart.x+dragDrwStart.w-nw;dragDrw.w=nw;dragDrw.h=Math.max(10,dragDrwStart.h+dy);}
+      else if(ep==='tr'){dragDrw.w=Math.max(10,dragDrwStart.w+dx);const nh=Math.max(10,dragDrwStart.h-dy);dragDrw.y=dragDrwStart.y+dragDrwStart.h-nh;dragDrw.h=nh;}
+      else if(ep==='tl'){const nw=Math.max(10,dragDrwStart.w-dx),nh=Math.max(10,dragDrwStart.h-dy);dragDrw.x=dragDrwStart.x+dragDrwStart.w-nw;dragDrw.y=dragDrwStart.y+dragDrwStart.h-nh;dragDrw.w=nw;dragDrw.h=nh;}
+    } else {
+      if(ep==='cp1'){dragDrw.cp1x=x;dragDrw.cp1y=y;}
+      else if(ep==='cp2'){dragDrw.cp2x=x;dragDrw.cp2y=y;}
+      else if(ep==='end'){dragDrw.x2=x;dragDrw.y2=y;}
+      else if(ep==='start'){dragDrw.x1=x;dragDrw.y1=y;}
+      else{
+        dragDrw.x1=dragDrwStart.x1+dx;dragDrw.y1=dragDrwStart.y1+dy;
+        dragDrw.x2=dragDrwStart.x2+dx;dragDrw.y2=dragDrwStart.y2+dy;
+        if(dragDrw.cp1x!==undefined){
+          dragDrw.cp1x=dragDrwStart.cp1x+dx;dragDrw.cp1y=dragDrwStart.cp1y+dy;
+          dragDrw.cp2x=dragDrwStart.cp2x+dx;dragDrw.cp2y=dragDrwStart.cp2y+dy;
+        }
+      }
+    }
+    redrawAll();return;
+  }
+  if(!drawing||!ds)return;
+  uiCtx.clearRect(0,0,uiC.width,uiC.height);
+  const d={type:tool,x1:ds.x,y1:ds.y,x2:x,y2:y,color:clr,cx:(ds.x+x)/2,cy:(ds.y+y)/2,r:Math.hypot(x-ds.x,y-ds.y)/2,curveFlip:ballSide==='right'?-1:1};
+  // For curve preview, don't store cp so it auto-computes
+  if(tool==='zone')drawZone(uiCtx,d);
+  else if(tool==='circle')drawCircle(uiCtx,d);
+  else drawArrow(uiCtx,d);
+});
+const endDraw=e=>{
+  if(panning){panning=false;uiC.style.cursor=tool==='move'?'default':'crosshair';return;}
+  if(dragEl){dragEl=null;return;}
+  if(dragTextResize){dragTextResize=null;dragTextStart=null;return;}
+  if(dragDrw){delete dragDrw._ep;dragDrw=null;dragDrwStart=null;return;}
+  if(!drawing||!ds)return;
+  const{x,y}=gp(e);
+  uiCtx.clearRect(0,0,uiC.width,uiC.height);drawing=false;
+  if(Math.hypot(x-ds.x,y-ds.y)>6){
+    if(tool==='circle') drawings.push({type:'circle',cx:(ds.x+x)/2,cy:(ds.y+y)/2,r:Math.hypot(x-ds.x,y-ds.y)/2,color:clr});
+    else if(tool==='zone') drawings.push({type:'zone',x:Math.min(ds.x,x),y:Math.min(ds.y,y),w:Math.abs(x-ds.x),h:Math.abs(y-ds.y),color:clr});
+    else drawings.push({type:tool,x1:ds.x,y1:ds.y,x2:x,y2:y,color:clr,curveFlip:ballSide==='right'?-1:1});
+    redrawAll();
+  }
+  ds=null;
+};
+uiC.addEventListener('mouseup',endDraw);
+uiC.addEventListener('mouseleave',endDraw);
+uiC.addEventListener('dblclick',e=>{
+  const{x,y}=gp(e);
+  // Elements: cycle through 3 sizes
+  const h=hitEl(x,y);
+  if(h){
+    pushUndo();
+    if(h.type==='text'){
+      if(h._box){
+        const nt=prompt('Editar etiqueta:',h.label);
+        if(nt!==null&&nt.trim()!==''){h.label=nt.trim();redrawAll();}
+        return;
+      }
+      const sizes=[10,14,18,24,32];
+      const cur=h.size||14;
+      const idx=sizes.findIndex(s=>s>=cur);
+      h.size=sizes[(idx+1)%sizes.length];
+      redrawAll();return;
+    }
+    const sizes=h.type==='ball'?[6,9,13,18]:h.type==='cone'?[8,12,16]:[11,14,18,24];
+    const cur=h.r||sizes[0];
+    const idx=sizes.findIndex(s=>s>=cur);
+    h.r=sizes[(idx+1)%sizes.length];
+    redrawAll();return;
+  }
+  // Drawings: cycle line weight
+  const hd=hitDrw(x,y)||selectedDrw;
+  if(hd){
+    pushUndo();
+    const ws=[1,1.8,3,5,8];
+    const cur=hd.lw||1.8;
+    const idx=ws.findIndex(s=>s>=cur-0.1);
+    hd.lw=ws[(idx+1)%ws.length];
+    selectedDrw=hd;redrawAll();return;
+  }
+});
+uiC.addEventListener('dragover',e=>e.preventDefault());
+uiC.addEventListener('drop',e=>{
+  e.preventDefault();if(!palDrag)return;
+  const r=uiC.getBoundingClientRect(),x=(e.clientX-r.left)/zoom,y=(e.clientY-r.top)/zoom;
+  pushUndo();
+  if(palDrag.type==='rso') elements.push({type:'rso',x,y,label:palDrag.label,r:14});
+  else if(palDrag.type==='rso2') elements.push({type:'rso2',x,y,label:palDrag.label,r:14});
+  else if(palDrag.type==='rival') elements.push({type:'rival',x,y,label:palDrag.label,rivalKey:palDrag.rivalKey,r:12,isGK:palDrag.isGK||false});
+  else if(palDrag.type==='ball') elements.push({type:'ball',x,y,r:8});
+  else if(palDrag.type==='cone') elements.push({type:'cone',x,y,color:clr});
+  else if(palDrag.type==='mark') elements.push({type:'mark',x,y,color:clr,r:7});
+  else if(palDrag.type==='label') elements.push({type:'text',x,y,label:palDrag.label,color:'#ffffff',textColor:palDrag.textColor||'#111',boxBorder:palDrag.boxBorder||'#0057B8',size:11,_box:true});
+  redrawAll();
+});
+
+// ═══ ACTIONS ══════════════════════════════════════════
+function setTool(t){tool=t;document.querySelectorAll('.tool-btn').forEach(b=>b.classList.toggle('active',b.dataset.tool===t));uiC.style.cursor=t==='move'?(zoom>1?'grab':'default'):'crosshair';}
+function setClr(el){clr=el.dataset.color;document.querySelectorAll('.sw').forEach(s=>s.classList.toggle('active',s===el));}
+function setField(t){
+  fieldType=t;
+  // Each view has a natural depth — area shows the box tight, others show more field
+  if(t==='area')               shownDepth=32;
+  else if(t==='half')          shownDepth=62;
+  else if(t==='checks')        shownDepth=62;
+  else if(t==='zubieta')       shownDepth=62;
+  else if(t==='zubieta-close') shownDepth=22;
+  document.querySelectorAll('[data-ft]').forEach(b=>b.classList.toggle('active',b.dataset.ft===t));
+  resize();autosave();
+}
+
+function onPlayTypeChange(){
+  const pt=document.getElementById('play-type').value;
+  const isZ=fieldType==='zubieta'||fieldType==='zubieta-close';
+  if(pt==='Penalti'){
+    if(!isZ) setField('area');
+    else shownDepth=22;
+  } else if(pt==='Falta frontal'||pt==='Falta lateral ofensiva'||pt==='Falta lateral defensiva'){
+    if(!isZ) setField('half');
+  } else {
+    if(!isZ) setField('area');
+  }
+  document.querySelectorAll('[data-ft]').forEach(b=>b.classList.toggle('active',b.dataset.ft===fieldType));
+  resize();
+}
+function setBallSide(side){
+  ballSide=side;
+  document.querySelectorAll('[data-bs]').forEach(b=>b.classList.toggle('active',b.dataset.bs===side));
+  const wrap=document.getElementById('field-wrap');
+  const CW=bgC.width,CH=bgC.height,SHOWN=42,PERSP=0.10,GS=Math.round(CH*0.10);
+  function txA(xm){const ins=CW*PERSP;return ins+(xm/PITCH_W)*(CW-2*ins);}
+  function tyA(ym){return GS+ym/SHOWN*(CH-GS);}
+  const bx=side==='left'?txA(.65):txA(PITCH_W-.65),by=tyA(.65);
+  const idx=elements.findIndex(e=>e._autoBall);
+  if(idx>=0)elements.splice(idx,1);
+  elements.push({type:'ball',x:bx,y:by,r:8,_autoBall:true});
+  redrawAll();
+  autosave();
+}
+function doErase(x,y){
+  const h=hitEl(x,y);if(h){pushUndo();if(selectedEl===h)selectedEl=null;elements.splice(elements.indexOf(h),1);redrawAll();return;}
+  const hd=hitDrw(x,y);if(hd){pushUndo();if(selectedDrw===hd)selectedDrw=null;drawings.splice(drawings.indexOf(hd),1);redrawAll();}
+}
+function doText(x,y){const t=prompt('Texto:');if(!t)return;pushUndo();elements.push({type:'text',x,y,label:t,color:clr,size:14});redrawAll();}
+function pushUndo(){undoStack.push({el:JSON.stringify(elements),dr:JSON.stringify(drawings)});if(undoStack.length>30)undoStack.shift();}
+function undoABP(){if(!undoStack.length)return;const s=undoStack.pop();elements=JSON.parse(s.el);drawings=JSON.parse(s.dr);redrawAll();}
+function clearAll(){pushUndo();elements=[];drawings=[];selectedEl=null;selectedDrw=null;redrawAll();showToast('✓ Jugada limpiada (↩ para deshacer)');}
+function applyTransform(){
+  const t=`translate(${panX}px,${panY}px) scale(${zoom})`;
+  [bgC,drwC,elC,uiC].forEach(c=>{c.style.transform=t;c.style.transformOrigin='center center';});
+}
+function setZoom(z){
+  zoom=Math.max(0.4,Math.min(3,Math.round(z*10)/10));lineScale=zoom;
+  if(zoom<=1){panX=0;panY=0;} // reset pan when zooming back out
+  clampPan();
+  document.getElementById('zoom-label').textContent=Math.round(zoom*100)+'%';
+  applyTransform();
+  redrawAll();
+}
+function clampPan(){
+  // Limit pan so the goal area always stays in view
+  const wrap=document.getElementById('field-wrap');
+  const maxPan=Math.max(0,(zoom-1)*wrap.clientWidth*0.6);
+  panX=Math.max(-maxPan,Math.min(maxPan,panX));
+  panY=Math.max(-maxPan,Math.min(maxPan,panY));
+}
+document.getElementById('field-wrap').addEventListener('wheel',e=>{e.preventDefault();setZoom(zoom+(e.deltaY<0?.1:-.1));},{passive:false});
+
+// ═══ PLAY NAVIGATION ══════════════════════════════════
+function saveCurrentPlay(){
+  plays[currentPlay]={elements:JSON.parse(JSON.stringify(elements)),drawings:JSON.parse(JSON.stringify(drawings)),
+    title:document.getElementById('play-title').value,playType:document.getElementById('play-type').value,
+    desc:document.getElementById('desc-input').value,notes:document.getElementById('notes-input').value,
+    fieldType,shownDepth,ballSide};
+}
+function loadPlay(idx){
+  currentPlay=idx;const p=plays[idx];
+  elements=JSON.parse(JSON.stringify(p.elements));drawings=JSON.parse(JSON.stringify(p.drawings));
+  selectedEl=null;selectedDrw=null;
+  document.getElementById('play-title').value=p.title||'';document.getElementById('play-type').value=p.playType||'Corner ofensivo';
+  document.getElementById('desc-input').value=p.desc||'';document.getElementById('notes-input').value=p.notes||'';
+  document.getElementById('play-counter').textContent=`${idx+1}/${plays.length}`;
+  if(p.fieldType){
+    // Migrate legacy field types to simplified set
+    const ftMap={'area-s':'area','half-s':'half','lateral-r':'half','lateral-l':'half'};
+    fieldType=ftMap[p.fieldType]||p.fieldType;
+  }
+  if(p.shownDepth){shownDepth=p.shownDepth;}
+  else if(p.fieldType){
+    // If no shownDepth stored, derive from fieldType
+    const depthMap={area:32,half:62,checks:62,zubieta:62,'zubieta-close':22};
+    shownDepth=depthMap[fieldType]||42;
+  }
+  if(p.ballSide){ballSide=p.ballSide;}
+  document.querySelectorAll('[data-ft]').forEach(b=>b.classList.toggle('active',b.dataset.ft===fieldType));
+  document.querySelectorAll('[data-bs]').forEach(b=>b.classList.toggle('active',b.dataset.bs===ballSide));
+  resize();
+  redrawAll();
+}
+function newPlay(){saveCurrentPlay();plays.push({elements:[],drawings:[],title:'',playType:'Corner ofensivo',desc:'',notes:''});loadPlay(plays.length-1);autosave();}
+function prevPlay(){if(currentPlay>0){saveCurrentPlay();loadPlay(currentPlay-1);autosave();}}
+function nextPlay(){if(currentPlay<plays.length-1){saveCurrentPlay();loadPlay(currentPlay+1);autosave();}}
+
+// ═══ LIBRARY UI ════════════════════════════════════════
+function populateLibCategorySelect(){
+  const sel=document.getElementById('lib-category');
+  if(!sel)return;
+  sel.innerHTML='';
+  Object.entries(LIB_CATEGORIES).forEach(([key,c])=>{
+    const o=document.createElement('option');o.value=key;o.textContent=c.label;sel.appendChild(o);
+  });
+}
+function onLibCategoryChange(){
+  const cat=document.getElementById('lib-category').value;
+  const subSel=document.getElementById('lib-subcategory');
+  subSel.innerHTML='';
+  Object.entries(LIB_CATEGORIES[cat].subs).forEach(([key,label])=>{
+    const o=document.createElement('option');o.value=key;o.textContent=label;subSel.appendChild(o);
+  });
+  onLibSubChange();
+}
+function onLibSubChange(){
+  const cat=document.getElementById('lib-category').value;
+  const sub=document.getElementById('lib-subcategory').value;
+  const query=(document.getElementById('lib-search').value||'').trim().toLowerCase();
+  const playSel=document.getElementById('lib-play');
+  playSel.innerHTML='';
+  const list=(library[cat]&&library[cat][sub])||[];
+  if(!list.length){
+    const o=document.createElement('option');o.value='';o.textContent='(sin jugadas guardadas)';playSel.appendChild(o);
+    return;
+  }
+  const matches=list.map((p,i)=>({p,i})).filter(({p})=>!query||(p.title||'').toLowerCase().includes(query));
+  if(!matches.length){
+    const o=document.createElement('option');o.value='';o.textContent='(sin resultados)';playSel.appendChild(o);
+    return;
+  }
+  matches.forEach(({p,i})=>{
+    const o=document.createElement('option');o.value=i;o.textContent=p.title||`Jugada ${i+1}`;playSel.appendChild(o);
+  });
+}
+function refreshLibrarySelectors(){
+  populateLibCategorySelect();
+  onLibCategoryChange();
+}
+function saveAsLibraryPlay(){
+  saveCurrentPlay();
+  const cat=document.getElementById('lib-category').value;
+  const sub=document.getElementById('lib-subcategory').value;
+  const catLabel=LIB_CATEGORIES[cat].label.replace(/^[^ ]+ /,'');
+  const subLabel=LIB_CATEGORIES[cat].subs[sub];
+  const cur=plays[currentPlay];
+  const suggested=cur.title||`${catLabel} · ${subLabel}`;
+  const name=prompt(`Guardar como jugada tipo\nCategoría: ${catLabel} › ${subLabel}\n\nNombre:`,suggested);
+  if(name===null||name.trim()==='')return;
+  const entry={
+    elements:JSON.parse(JSON.stringify(elements)),
+    drawings:JSON.parse(JSON.stringify(drawings)),
+    title:name.trim(),
+    playType:document.getElementById('play-type').value,
+    desc:document.getElementById('desc-input').value,
+    notes:document.getElementById('notes-input').value,
+    fieldType,shownDepth,ballSide,
+    savedAt:Date.now()
+  };
+  if(!library[cat])library[cat]={};
+  if(!library[cat][sub])library[cat][sub]=[];
+  library[cat][sub].push(entry);
+  refreshLibrarySelectors();
+  // Select the newly saved play
+  const playSel=document.getElementById('lib-play');
+  playSel.value=String(library[cat][sub].length-1);
+  autosave();
+  showToast(`✓ Guardada: "${name.trim()}"`);
+}
+function loadFromLibrary(){
+  const cat=document.getElementById('lib-category').value;
+  const sub=document.getElementById('lib-subcategory').value;
+  const idx=document.getElementById('lib-play').value;
+  if(idx===''||idx===undefined)return;
+  const entry=library[cat][sub][Number(idx)];
+  if(!entry)return;
+  if(elements.length||drawings.length){
+    if(!confirm('Esto reemplazará el contenido de la jugada actual. ¿Continuar?'))return;
+  }
+  pushUndo();
+  document.getElementById('play-title').value=entry.title||'';
+  document.getElementById('play-type').value=entry.playType||'Corner ofensivo';
+  document.getElementById('desc-input').value=entry.desc||'';
+  document.getElementById('notes-input').value=entry.notes||'';
+  if(entry.fieldType) setField(entry.fieldType);
+  if(entry.shownDepth) shownDepth=entry.shownDepth;
+  if(entry.ballSide){ballSide=entry.ballSide;document.querySelectorAll('[data-bs]').forEach(b=>b.classList.toggle('active',b.dataset.bs===ballSide));}
+  resize();
+  elements=JSON.parse(JSON.stringify(entry.elements));
+  drawings=JSON.parse(JSON.stringify(entry.drawings));
+  selectedEl=null;selectedDrw=null;
+  redrawAll();
+  showToast('✓ Jugada tipo cargada');
+}
+function deleteFromLibrary(){
+  const cat=document.getElementById('lib-category').value;
+  const sub=document.getElementById('lib-subcategory').value;
+  const idx=document.getElementById('lib-play').value;
+  if(idx===''||idx===undefined)return;
+  const entry=library[cat]&&library[cat][sub]&&library[cat][sub][Number(idx)];
+  if(!entry)return;
+  if(!confirm(`¿Quitar "${entry.title}" de jugadas tipo?`))return;
+  library[cat][sub].splice(Number(idx),1);
+  onLibSubChange();
+  autosave();
+  showToast('✓ Quitada de jugadas tipo');
+}
+function mergeLibrary(saved){
+  const lib=emptyLibrary();
+  if(saved&&typeof saved==='object'){
+    Object.keys(lib).forEach(cat=>{
+      if(saved[cat]) Object.keys(lib[cat]).forEach(sub=>{
+        if(Array.isArray(saved[cat][sub])) lib[cat][sub]=saved[cat][sub];
+      });
+    });
+  }
+  return lib;
+}
+
+// ═══ AUTOSAVE (localStorage) ══════════════════════════
+const ABP_STORE_KEY='abp_rso_project_v1';
+let autosaveTimer=null;
+function showSaveStatus(state){
+  const el=document.getElementById('save-status');
+  if(!el)return;
+  if(state==='saving'){el.textContent='Guardando…';el.style.color='var(--t3)';}
+  else if(state==='saved'){el.textContent='✓ Guardado';el.style.color='#22c55e';}
+}
+function autosave(){
+  clearTimeout(autosaveTimer);
+  showSaveStatus('saving');
+  autosaveTimer=setTimeout(()=>{
+    try{
+      saveCurrentPlay();
+      const data={plays,currentPlay,library,savedAt:Date.now()};
+      localStorage.setItem(ABP_STORE_KEY,JSON.stringify(data));
+      showSaveStatus('saved');
+    }catch(err){console.error('Autosave error',err);}
+  },600);
+}
+function loadFromStorage(){
+  try{
+    const raw=localStorage.getItem(ABP_STORE_KEY);
+    if(!raw)return false;
+    const data=JSON.parse(raw);
+    if(!data.plays||!data.plays.length)return false;
+    plays=data.plays;
+    if(data.library) library=mergeLibrary(data.library);
+    loadPlay(Math.min(data.currentPlay||0,plays.length-1));
+    refreshLibrarySelectors();
+    showSaveStatus('saved');
+    return true;
+  }catch(err){console.error('Load autosave error',err);return false;}
+}
+// ═══ PROJECT EXPORT / IMPORT (.json) — portable backup, independent of localStorage ═══
+function exportProject(){
+  saveCurrentPlay();
+  const data={app:'abp_rso',version:2,exportedAt:new Date().toISOString(),plays,currentPlay,library};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  const stamp=new Date().toISOString().slice(0,10);
+  a.href=url;a.download=`abp_rso_proyecto_${stamp}.json`;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+  showToast('✓ Proyecto exportado (.json)');
+}
+function importProject(event){
+  const file=event.target.files&&event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.plays||!Array.isArray(data.plays)||!data.plays.length){
+        alert('El archivo no parece un proyecto válido de ABP RSO.');return;
+      }
+      if(!confirm(`Importar ${data.plays.length} jugadas${data.library?' + jugadas tipo':''} del archivo. ¿Continuar?`))return;
+      plays=data.plays;
+      if(data.library) library=mergeLibrary(data.library);
+      selectedEl=null;selectedDrw=null;
+      loadPlay(Math.min(data.currentPlay||0,plays.length-1));
+      refreshLibrarySelectors();
+      autosave();
+      showToast('✓ Proyecto importado ('+plays.length+' jugadas)');
+    }catch(err){
+      console.error('Import error',err);
+      alert('No se pudo leer el archivo.');
+    }finally{event.target.value='';}
+  };
+  reader.readAsText(file);
+}
+// Hook autosave into every state-changing action by wrapping pushUndo (called before every edit)
+const _origPushUndo=pushUndo;
+pushUndo=function(){_origPushUndo();autosave();};
+// Also autosave on sidebar field edits and play navigation
+['play-title','play-type','desc-input','notes-input'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',autosave);
+});
+
+// ═══ EXPORT ══════════════════════════════════════════
+function exportIMG(){
+  // Render at high resolution for clear printing/sharing, regardless of on-screen window size.
+  const TARGET_W=3600;
+  const curCW=bgC.width, curCH=bgC.height;
+  const scale=TARGET_W/curCW;
+  const W=Math.round(curCW*scale), H=Math.round(curCH*scale);
+
+  // Scale all element/drawing coordinates (and sizes) to match the high-res canvas,
+  // then restore the originals afterward so on-screen editing is unaffected.
+  const origElements=JSON.parse(JSON.stringify(elements));
+  const origDrawings=JSON.parse(JSON.stringify(drawings));
+  function scalePt(o,keys){keys.forEach(k=>{if(o[k]!==undefined)o[k]*=scale;});}
+  elements.forEach(e=>{
+    scalePt(e,['x','y','r','size']);
+  });
+  drawings.forEach(d=>{
+    scalePt(d,['x1','y1','x2','y2','cx','cy','cpx','cpy','cp1x','cp1y','cp2x','cp2y','r','w','h']);
+    d.lw=(d.lw||1.8)*scale;
+  });
+
+  // Temporarily resize the real canvases and redraw everything at high-res
+  [bgC,drwC,elC].forEach(c=>{c.width=W;c.height=H;});
+  drawField(); redrawAll();
+
+  const merged=document.createElement('canvas');merged.width=W;merged.height=H;
+  const ctx=merged.getContext('2d');
+  ctx.fillStyle='#0e161f';ctx.fillRect(0,0,W,H);
+  ctx.drawImage(bgC,0,0);ctx.drawImage(drwC,0,0);ctx.drawImage(elC,0,0);
+  const rawTitle=document.getElementById('play-title').value||'RSO · ABP';
+  const playType=document.getElementById('play-type').value||'';
+  const rawLower=(rawTitle+' '+playType).toLowerCase();
+  const isDefensive=rawLower.includes('defens');
+  const accent=isDefensive?'#ff5555':'#5599ff';
+  const bgCol=isDefensive?'rgba(120,0,0,0.85)':'rgba(0,30,120,0.85)';
+  const tag=isDefensive?'⛔ DEFENSIVO':'⚡ OFENSIVO';
+  const isLat=fieldType==='lateral-r'||fieldType==='lateral-l';
+  const GS=isLat?0:Math.round(H*((fieldType==='zubieta'||fieldType==='zubieta-close')?0.22:0.10));
+  const textOnRight=ballSide==='left'; // title goes opposite to ball
+  if(GS>20){
+    ctx.save();
+    // Fixed small size — about 1.4% of image width, never huge
+    const titleSize=Math.max(24,Math.round(W*0.020));
+    const tagSize=Math.max(16,Math.round(W*0.013));
+    const PAD=Math.round(W*0.008);
+    const GAP=Math.round(W*0.005);
+    const MARGIN=Math.round(W*0.012); // margin from edge of canvas
+    const VTOP=Math.round(GS*0.18);   // vertical position: upper portion of dark zone
+
+    ctx.font=`bold ${titleSize}px "Barlow Condensed",Arial`;
+    const titleW=ctx.measureText(rawTitle).width;
+    ctx.font=`bold ${tagSize}px "Barlow Condensed",Arial`;
+    const tagW=ctx.measureText(tag).width;
+
+    const pillH=Math.round(titleSize*1.55);
+    const pillW=tagW+GAP+titleW+PAD*2;
+    const pillX=textOnRight ? W-MARGIN-pillW : MARGIN;
+    const pillY=VTOP;
+
+    // Pill background
+    ctx.fillStyle=bgCol;
+    ctx.beginPath();ctx.roundRect(pillX,pillY,pillW,pillH,Math.round(pillH*0.2));ctx.fill();
+    // Accent bar at bottom of pill
+    ctx.fillStyle=accent;
+    ctx.fillRect(pillX+PAD,pillY+pillH-Math.round(pillH*0.06),pillW-PAD*2,Math.round(pillH*0.06));
+
+    const midY=pillY+pillH/2;
+    ctx.textAlign='left';ctx.textBaseline='middle';
+    // Tag (OFENSIVO / DEFENSIVO)
+    ctx.font=`bold ${tagSize}px "Barlow Condensed",Arial`;
+    ctx.fillStyle=accent;ctx.fillText(tag,pillX+PAD,midY);
+    // Title
+    ctx.font=`bold ${titleSize}px "Barlow Condensed",Arial`;
+    ctx.fillStyle='#ffffff';ctx.fillText(rawTitle,pillX+PAD+tagW+GAP,midY);
+    ctx.restore();
+  }
+  merged.toBlob(blob=>{
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=(rawTitle||'abp').replace(/[^a-zA-Z0-9_]/g,'_')+'.png';
+    document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+    showToast('✓ Exportado en alta resolución');
+    // Restore original (on-screen) element/drawing coordinates and canvas size
+    elements=origElements;drawings=origDrawings;
+    resize();
+  },'image/png');
+}
+// ═══ PLAY TEMPLATES (Jugadas tipo) ═══════════════════
+// Coordinates in pitch meters: x 0-68 (width), y 0=goal line going to 68=halfway.
+// Built for ballSide='left' (corner taken from the left). RSO players use generic
+// labels (P1, P2...) since exact roles vary; "X" mark = blocking reference (red X over RSO).
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';setTimeout(()=>t.style.opacity='0',2000);}
+
+// ═══ KEYBOARD ══════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  const tag=document.activeElement?.tagName?.toLowerCase(),isInput=tag==='input'||tag==='textarea';
+  if(isInput)return;
+  if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();doErase(lastMouse.x,lastMouse.y);}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undoABP();}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'){
+    e.preventDefault();
+    const h=hitEl(lastMouse.x,lastMouse.y);
+    if(h){clipboard={kind:'el',data:JSON.parse(JSON.stringify(h))};showToast('✓ Copiado');}
+    else if(selectedDrw){clipboard={kind:'drw',data:JSON.parse(JSON.stringify(selectedDrw))};showToast('✓ Copiado');}
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='v'){
+    e.preventDefault();if(!clipboard)return;pushUndo();
+    if(clipboard.kind==='el'){const cl=JSON.parse(JSON.stringify(clipboard.data));cl.x=lastMouse.x;cl.y=lastMouse.y;elements.push(cl);}
+    else if(clipboard.kind==='drw'){
+      const cl=JSON.parse(JSON.stringify(clipboard.data));
+      const dx2=lastMouse.x-(cl.x1||cl.cx||cl.x||0),dy2=lastMouse.y-(cl.y1||cl.cy||cl.y||0);
+      if(cl.x1!==undefined){cl.x1+=dx2;cl.y1+=dy2;cl.x2+=dx2;cl.y2+=dy2;if(cl.cpx!==undefined){cl.cpx+=dx2;cl.cpy+=dy2;}}
+      else if(cl.cx!==undefined){cl.cx+=dx2;cl.cy+=dy2;}
+      else{cl.x+=dx2;cl.y+=dy2;}
+      drawings.push(cl);selectedDrw=cl;
+    }
+    redrawAll();showToast('✓ Pegado');
+  }
+});
+
+// ═══ BUILD PALETTE ══════════════════════════════════════
+function buildRival(){
+  const row=document.getElementById('rival-pieces');row.innerHTML='';
+  const key=document.getElementById('rival-top').value;
+  const rv=RIVALS[key]||{pattern:'solid',c1:'#888',c2:'#888',border:'#555',gk:'#888'};
+  // Goalkeeper piece first
+  const gk=document.createElement('div');gk.className='pc';gk.draggable=true;gk.textContent='🧤';gk.title='Portera';
+  gk.style.background=rv.gk;gk.style.color='#fff';gk.style.border=`2px solid rgba(255,255,255,0.5)`;
+  gk.addEventListener('dragstart',()=>palDrag={type:'rival',label:'',rivalKey:key,isGK:true});
+  row.appendChild(gk);
+  for(let n=1;n<=10;n++){
+    const d=document.createElement('div');d.className='pc';d.draggable=true;d.style.width='20px';d.style.padding='3px';
+    if(rv.pattern==='stripes'){d.style.background=`linear-gradient(90deg, ${rv.c1} 0%, ${rv.c1} 25%, ${rv.c2} 25%, ${rv.c2} 45%, ${rv.c1} 45%, ${rv.c1} 55%, ${rv.c2} 55%, ${rv.c2} 75%, ${rv.c1} 75%, ${rv.c1} 100%)`;}
+    else if(rv.pattern==='halves'){d.style.background=`linear-gradient(90deg, ${rv.c1} 0%, ${rv.c1} 50%, ${rv.c2} 50%, ${rv.c2} 100%)`;}
+    else if(rv.pattern==='halves-h'){d.style.background=`linear-gradient(180deg, ${rv.c1} 0%, ${rv.c1} 50%, ${rv.c2} 50%, ${rv.c2} 100%)`;}
+    else if(rv.pattern==='stripes-h'){d.style.background=`linear-gradient(180deg, ${rv.c1} 0%, ${rv.c1} 25%, ${rv.c2} 25%, ${rv.c2} 45%, ${rv.c1} 45%, ${rv.c1} 55%, ${rv.c2} 55%, ${rv.c2} 75%, ${rv.c1} 75%, ${rv.c1} 100%)`;}
+    else{d.style.background=rv.c1;}
+    d.style.border=`2px solid ${rv.border}`;
+    d.addEventListener('dragstart',()=>palDrag={type:'rival',label:'',rivalKey:key,isGK:false});
+    row.appendChild(d);
+  }
+}
+function onRivalTopChange(){
+  const key=document.getElementById('rival-top').value;
+  const inp=document.getElementById('gen-name-input');
+  if(inp) inp.style.display=key==='GEN'?'inline-block':'none';
+  buildRival();
+  saveCurrentPlay();
+  autosave();
+}
+function onGenNameChange(){
+  const name=document.getElementById('gen-name-input').value.trim()||'Equipo ficticio';
+  // Update the option text in all rival-top selects
+  document.querySelectorAll('#rival-top option[value="GEN"], #play-rival option[value="GEN"], #nav-rival-filter option[value="GEN"]').forEach(o=>o.textContent=name);
+  // Store in RIVALS so drawRival can use it if needed
+  RIVALS.GEN._name=name;
+  autosave();
+}
+// ═══ BUILD PALETTE ══════════════════════════════════════
+function buildPal(){
+  const rsoRow=document.getElementById('rso-pieces');
+  RSO_PLAYERS.forEach(p=>{
+    const d=document.createElement('div');d.className='pc';d.draggable=true;d.textContent=p.i;d.title=p.n;
+    d.dataset.label=p.i;
+    d.style.background='linear-gradient(90deg,#fff 0%,#fff 25%,#0057B8 25%,#0057B8 55%,#fff 55%,#fff 75%,#0057B8 75%,#0057B8 100%)';
+    d.style.color='#0057B8';d.style.border='1.5px solid #0a1a3d';
+    d.addEventListener('dragstart',()=>palDrag={type:rsoKit===1?'rso':'rso2',label:p.i});
+    rsoRow.appendChild(d);
+  });
+  document.getElementById('rival-top').addEventListener('change',onRivalTopChange);buildRival();
+  const matRow=document.getElementById('mat-pieces');
+  [['⚽','Balón','ball','#555'],['▲','Cono','cone','#f0901a'],['●','Marca','mark','#ef4444']].forEach(([sym,title,type,bg])=>{
+    const d=document.createElement('div');d.className='pc';d.draggable=true;d.textContent=sym;d.title=title;
+    d.style.background=bg;d.style.color='#fff';
+    d.addEventListener('dragstart',()=>palDrag={type});matRow.appendChild(d);
+  });
+  // Diccionario de términos — corner ofensivo (mismo diseño de caja que REMATADORA)
+  const LABEL_TERMS=[
+    {label:'CORTA',      textColor:'#111', boxBorder:'#0057B8'},
+    {label:'FRONTAL',    textColor:'#111', boxBorder:'#0057B8'},
+    {label:'REMATADORA', textColor:'#111', boxBorder:'#0057B8'},
+    {label:'BLOQUEO',    textColor:'#ef4444', boxBorder:'#0057B8'},
+    {label:'2v1',        textColor:'#111', boxBorder:'#0057B8'},
+    {label:'CIERRA',     textColor:'#111', boxBorder:'#0057B8'},
+    {label:'PT',         textColor:'#111', boxBorder:'#0057B8'},
+    {label:'ZPALO',      textColor:'#111', boxBorder:'#0057B8'},
+    {label:'Z1',         textColor:'#111', boxBorder:'#0057B8'},
+    {label:'Z2',         textColor:'#111', boxBorder:'#0057B8'},
+    {label:'CAAT',       textColor:'#111', boxBorder:'#0057B8'},
+    {label:'MARCA',      textColor:'#111', boxBorder:'#0057B8'}
+  ];
+  const labelSelect=document.getElementById('label-select');
+  LABEL_TERMS.forEach(t=>{
+    const o=document.createElement('option');o.value=t.label;o.textContent=t.label;
+    o.dataset.textColor=t.textColor;o.dataset.boxBorder=t.boxBorder;
+    labelSelect.appendChild(o);
+  });
+}
+function armLabelTool(){
+  const sel=document.getElementById('label-select');
+  const opt=sel.options[sel.selectedIndex];
+  if(!opt)return;
+  pendingLabel={label:opt.value,textColor:opt.dataset.textColor,boxBorder:opt.dataset.boxBorder};
+  setTool('label');
+  showToast('✓ Clic en el campo para colocar "'+opt.value+'"');
+}
+
+new ResizeObserver(resize).observe(document.getElementById('field-wrap'));
+buildPal();
+resize();
+refreshLibrarySelectors();
+loadFromStorage();
+</script>
+</body>
+</html>
